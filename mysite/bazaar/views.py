@@ -1,8 +1,20 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Item
+from django.views import generic
 
 # Create your views here.
+class ItemView(generic.ListView):
+    model = Item
+    template_name = 'bazaar/item.html'
+    # context_object_name = 'latest_question_list'
+    # def get_queryset(self):
+    #     """
+    #     Return the last five published questions (not including those set to be
+    #     published in the future).
+    #     """
+    #     # lte- less then or equal to
+    #     return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
 def home(request):
     context = {

@@ -4,5 +4,32 @@
     <h1> {{ user.username }} </h1>
     <div class="content-section">
 
+        <div class="media">
+            <div class="media-body">
+              <h2 class="account-heading">{{ user.username }}</h2>
+              <p class="text-secondary">{{ user.email }}</p>
+            </div>
+        </div>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Profile Info</legend>
+                {{ u_form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Update</button>
+            </div>
+        </form>
     </div>
 {% endblock content %}
+
+<!--        <div class="content-section">-->
+<!--          <div class="media">-->
+
+<!--            <div class="media-body">-->
+<!--              <h2 class="account-heading">Username</h2>-->
+<!--              <p class="text-secondary">username@email.com</p>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          &lt;!&ndash; FORM HERE &ndash;&gt;-->
+<!--        </div>-->

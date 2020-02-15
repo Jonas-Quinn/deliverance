@@ -20,11 +20,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '0!fk-1q43zjg$(rr_n&7em1mwm!0vm5uh$fe(11o%pxbhsv#5h'
+# SECRET_KEY = os.environ.get('SECRET_KEY')
+#SECRET_KEY = '0!fk-1q43zjg$(rr_n&7em1mwm!0vm5uh$fe(11o%pxbhsv#5h'
+SECRET_KEY = 'd8e1373287ee513740a2014e85c3c14064deaea094928794'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 DEBUG = True
 
+#ALLOWED_HOSTS = ['bluebazaar.herokuapp.com', 'localhost']
 ALLOWED_HOSTS = []
 
 
@@ -120,6 +124,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticflies')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

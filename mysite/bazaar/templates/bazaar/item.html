@@ -1,7 +1,6 @@
 {% extends "bazaar/base.html" %}
 {% block content %}
-    <h1> Welcome in Bazaar!</h1>
-    {% for post in posts %}
+    <h1> {{ item.title }}</h1>
         <article class="media content-section">
           <img class="circle account-img" src="{{ post.image.url }}">
           <div class="media-body">
@@ -14,6 +13,8 @@
             <p class="text-secondary">{{ post.merchant }}</p>
           </div>
         </article>
+    {% for post in posts %}
+
 
 <!--        <div class="content-section">-->
 <!--          <div class="media">-->
