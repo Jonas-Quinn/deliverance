@@ -1,24 +1,22 @@
 {% extends "bazaar/base.html" %}
 {% block content %}
-        <article class="media content-section">
-          <div class="media-body">
-
-               <h1 class="header-center">Welcome in Bazaar! </h1>
-          </div>
-        </article>
+    <article class="media content-section">
+        <h2 class="header-center"> Auctions by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h2>
+    </article>
     {% for post in posts %}
-        <article class="media content-section">
-          <img class="circle account-img" src="{{ post.main_image.url }}">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{% url 'merchant-items' post.merchant.username %}">{{ post.merchant }}</a>
-              <small class="mr-3">{{ post.date_posted|date:"d F Y" }}</small>
-            </div>
-            <h3><a class="article-title" href="{% url 'item-detail' post.id %}">{{ post.title }}</a></h3>
-            <h2 class="article-title">${{ post.price }}</h2>
-<!--            <p class="text-secondary">{{ post.merchant }}</p>-->
-          </div>
-        </article>
+        <a class="article-title" href="{% url 'item-detail' post.id %}">
+            <article class="media content-section">
+              <img class="circle account-img" src="{{ post.main_image.url }}">
+              <div class="media-body">
+                <div class="article-metadata">
+                  <a class="mr-2" href="{% url 'merchant-items' post.merchant.username %}">{{ post.merchant }}</a>
+                  <small class="text">{{ post.date_posted|date:"d F Y" }}</small>
+                </div>
+                  <h3 ><a class="article-title" href="{% url 'item-detail' post.id %}">{{ post.title }}</a></h3>
+                <h2 class="article-title">${{ post.price }}</h2>
+              </div>
+            </article>
+        </a>
 
 <!--        <div class="content-section">-->
 <!--          <div class="media">-->

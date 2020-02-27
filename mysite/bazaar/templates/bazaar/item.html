@@ -1,11 +1,11 @@
 {% extends "bazaar/base.html" %}
 {% block content %}
-    <h1> {{ item.title }}</h1>
+    <h1 class="mb-3"> {{ item.title }}</h1>
         <article class="media content-section">
-          <img class="circle account-img" src="{{ post.image.url }}">
+          <img class="circle account-img" src="{{ post.main_image.url }}">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
+              <a class="mr-2" href="#">{{ post.merchant }}</a>
               <small class="text-muted">{{ post.date_posted|date:"d F Y" }}</small>
             </div>
             <h2><a class="article-title" href="#">{{ post.title }}</a></h2>

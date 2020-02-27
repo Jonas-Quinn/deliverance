@@ -9,11 +9,7 @@ body {
     background-size: cover;
 }
 h1, h2, h3, h4, h5, h6 {
-  color: #444444;
-}
-
-ul {
-  margin: 0;
+  color: #00173d;
 }
 
 .bg-steel {
@@ -25,7 +21,7 @@ ul {
 }
 
 .site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
+  color: #99ffb8;
 }
 
 .site-header .navbar-nav .nav-link.active {
@@ -33,19 +29,20 @@ ul {
 }
 
 .content-section {
-  background: #ffffff;
+  background: rgba(235, 255, 87, 0.3);
   padding: 10px 20px;
-  border: 1px solid #dddddd;
+  border: 1px solid #0095ff;
   border-radius: 3px;
   margin-bottom: 20px;
+  margin-top: 40px;
 }
 
 .article-title {
-  color: #444444;
+  color: #000000;
 }
 
 a.article-title:hover {
-  color: #428bca;
+  color: #000000;
   text-decoration: none;
 }
 
@@ -62,11 +59,11 @@ a.article-title:hover {
 .article-metadata {
   padding-bottom: 1px;
   margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3
+  border-bottom: 1px solid #0062ff
 }
 
 .article-metadata a:hover {
-  color: #333;
+  color: #000000;
   text-decoration: none;
 }
 
@@ -77,12 +74,40 @@ a.article-title:hover {
 }
 
 .account-img {
-  height: 125px;
-  width: 125px;
+  max-width:125px;
+  height:auto;
   margin-right: 20px;
   margin-bottom: 16px;
 }
 
 .account-heading {
   font-size: 2.5rem;
+}
+
+.list-group {
+  background-color: (255, 255, 0, 0.25);
+}
+
+.transparent-input {
+   background-color: rgba(0, 0, 0, 0) !important;
+   border:none;
+}
+
+.header-center{
+  text-align: center;
+}
+
+.fieldform {
+   background-color: rgba(0, 0, 0, 0) !important;
+   border:none;
+}
+
+.gallery {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.gallery .img-thumbnail {
+    width:auto;
+    height:auto;
 }

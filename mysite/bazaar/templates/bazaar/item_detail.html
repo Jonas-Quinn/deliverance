@@ -1,0 +1,56 @@
+{% extends "bazaar/base.html" %}
+{% block content %}
+    <h1> {{ object.title }}</h1>
+        <article class="media content-section">
+          <img class="circle account-img" src="{{ object.main_image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'merchant-items' object.merchant.username %}">{{ object.author }}</a>
+              <small class="text-muted">{{ object.date_posted|date:"d F Y" }}</small>
+                {% if object.merchant == user %}
+                  <div class="form-group">
+                    <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'item-update' object.id %}">Edit</a>
+                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'item-delete' object.id %}">Delete</a>
+                  </div>
+                {% endif %}
+            </div>
+            <h2 class="article-title">{{ object.title }}</h2>
+            <h3 class="article-title">${{ object.price }}</h3>
+            <p class="article-content">{{ object.description }}</p>
+          </div>
+<!--            {% for object.item_image in object.item_images %}-->
+<!--               {% if object.item_image %}-->
+<!--                   <div>-->
+<!--                      <a href="#" class="image"><img src="{{ object.item_image.image.url }}"></a>-->
+<!--                   </div>-->
+<!--                {% endif %}-->
+<!--            {% endfor %}-->
+
+
+        </article>
+
+
+          <div class="row gallery">
+            {% for p in object.item_image_set.all %}
+            {% if p.image %}
+              <div class="col-md-6">
+                <img src="{{ p.image.url }}" alt="Image Not Found" class="img-thumbnail">
+              </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+<!--    {% for post in posts %}-->
+<!---->
+<!---->
+<!--        <div class="content-section">-->
+<!--          <div class="media">-->
+
+<!--            <div class="media-body">-->
+<!--              <h2 class="account-heading">Username</h2>-->
+<!--              <p class="text-secondary">username@email.com</p>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          &lt;!&ndash; FORM HERE &ndash;&gt;-->
+<!--        </div>-->
+<!--    {% endfor %}-->
+{% endblock content %}

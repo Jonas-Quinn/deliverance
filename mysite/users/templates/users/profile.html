@@ -1,13 +1,12 @@
 {% extends "bazaar/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h1> {{ user.username }} </h1>
     <div class="content-section">
 
         <div class="media">
             <div class="media-body">
               <h2 class="account-heading">{{ user.username }}</h2>
-              <p class="text-secondary">{{ user.email }}</p>
+              <p class="text-info">{{ user.email }}</p>
             </div>
         </div>
         <form method="POST" enctype="multipart/form-data">

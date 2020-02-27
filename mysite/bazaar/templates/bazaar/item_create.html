@@ -1,0 +1,15 @@
+{% extends "bazaar/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ formset.management_form }}
+        {% for f in formset %}
+          {{ f.as_p }}
+        {% endfor %}
+        <input type="submit" value="Create" class="btn btn-outline-success">
+      </form>
+    </div>
+{% endblock content %}

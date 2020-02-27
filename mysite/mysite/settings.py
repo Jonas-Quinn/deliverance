@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -20,16 +21,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ.get('SECRET_KEY')
-#SECRET_KEY = '0!fk-1q43zjg$(rr_n&7em1mwm!0vm5uh$fe(11o%pxbhsv#5h'
-SECRET_KEY = 'd8e1373287ee513740a2014e85c3c14064deaea094928794'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
-DEBUG = True
+DEBUG = (os.environ.get('DUBUG_VALUE') == 'True')  #need to change U
+#DEBUG = True
 
-#ALLOWED_HOSTS = ['bluebazaar.herokuapp.com', 'localhost']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bluebazaar.herokuapp.com', 'localhost', '127.0.0.1']
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -44,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +132,30 @@ MEDIA_URL = '/media/'
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 LOGIN_REDIRECT_URL = 'bazaar-home'
 
 LOGIN_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+
+
+#DJANGO BLOG VARS
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+# AWS_QUERYSTRING_AUTH = True
+# AWS_QUERYSTRING_EXPIRE = 603200
+AWS_S3_REGION_NAME = "eu-west-2"
+
+AWS_S3_FILE_OVERWRITE = False  # this forbids overwriting files
+AWS_DEFAULT_ACL = None
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
