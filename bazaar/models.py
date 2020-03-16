@@ -30,6 +30,14 @@ class Item(models.Model):
         'price', max_digits=8, decimal_places=2, default=0,
         validators=[MinValueValidator(0, "Are you OK?! Price can\'t be lesser than %(limit_value)s!")]
     )
+    end_of_auction = models.DateTimeField(
+        'end of auction',
+        default=timezone.now()+datetime.timedelta(days=10),
+        validators=[MinValueValidator(
+            timezone.now(),
+            "You can\'t set end of auction in the past."
+        )]
+    )
 
     def __str__(self):
         return self.title
@@ -48,26 +56,23 @@ class Item(models.Model):
     def get_absolute_url(self):
         return reverse('item-detail', kwargs={'pk': self.pk})
 
-    def end_of_auction(self):
-        return datetime.timedelta(days=10) + self.date_posted
+    def remaining_time(self):
+        if (self.end_of_auction - self.date_posted).days > 0:
+            return (self.end_of_auction - self.date_posted).days
 
-    end_of_auction.admin_order_field = 'date_posted'
-    #end_of_auction.boolean = True
-    end_of_auction.short_description = 'When is end the of this auction?'
+    remaining_time.admin_order_field = 'remaining_time'
+    remaining_time.short_description = 'How much time is left?'
 #
 # def upload_images_location(instance, filename):
 #     filebase, extension = filename.split('.')
 #     return 'auction_images/%s/%s.%s' % (instance.item.id, instance.id, extension)
+
 
 class Item_Image(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.item.id)
-
-    # def file_name(self, filename):
-    #     extension = filename.split('.')[-1]
-    #     return 'auction_images/%s/%s.%s' % (self.item.id, self.id, extension)
 
     image = models.ImageField(upload_to=get_path_for_my_model_file, default='default_item.jpg')
 
@@ -83,3 +88,16 @@ class Item_Image(models.Model):
     #         img.save(self.image.path)
 
 
+class Bid(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    merchant = models.ForeignKey(User, models.SET_NULL, blank=True, null=True)
+    bid = models.DecimalField(
+        'new price', max_digits=8, decimal_places=2, default=0,
+        validators=[MinValueValidator(0, "Are you OK?! Price can\'t be lesser than %(limit_value)s!")]
+    )
+    date = models.DateTimeField(auto_now_add=True)
+
+
+class Watch_List(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(Item, verbose_name="watch list")

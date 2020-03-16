@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Item, Item_Image
+from .models import Item, Item_Image, Watch_List
 from django.views import generic
+from users.models import Profile
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import (
@@ -12,6 +13,7 @@ from django.contrib.auth.mixins import (
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.forms import modelformset_factory
+from .decorators import active_auction
 from .forms import *
 # Create your views here.
 
@@ -42,7 +44,6 @@ class MerchantItemListView(generic.ListView):
 class ItemDetailView(generic.DetailView):
     model = Item
     template_name = 'bazaar/item_detail.html'
-    # context_object_name = 'latest_question_list'
     # def get_queryset(self):
     #     """
     #     Return the last five published questions (not including those set to be
@@ -56,6 +57,39 @@ class ItemDetailView(generic.DetailView):
         """
         return Item.objects.filter(date_posted__lte=timezone.now())
 
+def item_detail(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    item_images = list(Item_Image.objects.filter(item=item))
+    # is_liked = False
+    # is_favourite = False
+    # if post.likes.filter(id=request.user.id).exists():
+    #     is_liked = True
+    #
+    # if post.favourite.filter(id=request.user.id).exists():
+    #     is_favourite = True
+
+    # if request.method == 'POST':
+    #     # comment_form = CommentForm(request.POST or None)
+    #     # if comment_form.is_valid():
+    #         content = request.POST.get('content')
+    #         reply_id = request.POST.get('comment_id')
+    #         comment_qs = None
+    #         if reply_id:
+    #             comment_qs = Comment.objects.get(id=reply_id)
+    #         comment = Comment.objects.create(post=post, user=request.user, content=content, reply=comment_qs)
+    #         comment.save()
+    #         # return HttpResponseRedirect(post.get_absolute_url())
+    # else:
+    #     comment_form = CommentForm()
+
+    context = {
+        'item': item,
+        'images': item_images,
+        'bids': Bid.objects.filter(item=item).order_by('-date')
+    }
+    return render(request, "bazaar/item_detail.html", context)
+
+
 class ItemCreateView(LoginRequiredMixin, generic.CreateView):  # this order redirect to login page if you're not logged
     model = Item
     fields = ['title', 'description']
@@ -64,20 +98,30 @@ class ItemCreateView(LoginRequiredMixin, generic.CreateView):  # this order redi
         form.instance.merchant = self.request.user
         return super().form_valid(form)
 
-# class Item_ImageCreateView(Item, LoginRequiredMixin, UserPassesTestMixin, generic.CreateView):
-#     model = Item_Image
-#     fields = ['name', 'image']
-#
-#     def form_valid(self, form):
-#         form.instance.item = Item
-#         return super().form_valid(form)
-#
-#
-#     def test_func(self):
-#         item_image = self.get_object()
-#         if self.request.item == item_image.item:
-#             return True
-#         return False
+@active_auction
+@login_required
+def bidding(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    form = BiddingForm(request.POST, old_price=item.price)
+    if request.method == "POST":
+        if form.is_valid():  # This would call the clean method for you
+            bid = form.save(commit=False)
+            bid.item = item
+            bid.merchant = request.user
+            bid.save()
+            item.price = bid.bid
+            item.save()
+            messages.success(request, "Auction has been successfully bidded.")
+            return HttpResponseRedirect('/item/%s/' % item.id)
+        else:  # Form is invalid
+            print
+            form.errors  # You have the error list here.
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'bazaar/bidding.html', context)
+
 
 @login_required
 def item_create(request):
@@ -98,8 +142,6 @@ def item_create(request):
                     break
             messages.success(request, "Post has been successfully created.")
             return HttpResponseRedirect('/item/%s/' %item.id)
-        else:
-            return redirect('bazaar-about')
     else:
         form = ItemCreateForm()
         formset = ImageFormset(queryset=Item_Image.objects.none())
@@ -166,3 +208,19 @@ def about(request):
 #         # with POST data. This prevents data from being posted twice if a
 #         # user hits the Back button.
 #     return HttpResponseRedirect(reverse('polls:results', args=(question_id,)))
+#
+# @login_required
+# def watch(request, item_id):
+#     item = get_object_or_404(Item, pk = item_id)
+#     new_item = item.get(pk=request.POST['title'])
+#     add_item = Watch_List.objects.filter(user=request.user, items = new_item)
+#     if add_item.exists():
+#         user.watch_list.items.remove(add_item)
+#     else:
+#         user.watch_list.add(new_item)
+#         add_item.save()
+#
+# Always return an HttpResponseRedirect after successfully dealing
+# with POST data. This prevents data from being posted twice if a
+# user hits the Back button
+#

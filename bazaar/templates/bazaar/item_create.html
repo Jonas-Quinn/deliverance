@@ -13,3 +13,14 @@
       </form>
     </div>
 {% endblock content %}
+
+
+{% block extra_js %}
+    <script>
+      $(function () {
+        $("#id_end_of_auction").datetimepicker({
+           dateFormat: 'yy-mm-dd', controlType: 'select'
+        });
+      });
+    </script>
+{% endblock extra_js %}

@@ -1,36 +1,77 @@
 {% extends "bazaar/base.html" %}
+{% load static %}
+{% load bazaar_tags %}
 {% block content %}
-        <article class="media content-section">
-          <div class="media-body">
+    <article class="media content-section">
+      <div class="media-body">
 
-               <h1 class="header-center">Welcome in Bazaar! </h1>
-          </div>
-        </article>
-    {% for post in posts %}
-        <article class="media content-section">
-          <img class="circle account-img" src="{{ post.main_image.url }}">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{% url 'merchant-items' post.merchant.username %}">{{ post.merchant }}</a>
-              <small class="mr-3">{{ post.date_posted|date:"d F Y" }}</small>
-            </div>
-            <h3><a class="article-title" href="{% url 'item-detail' post.id %}">{{ post.title }}</a></h3>
-            <h2 class="article-title">${{ post.price }}</h2>
-<!--            <p class="text-secondary">{{ post.merchant }}</p>-->
-          </div>
-        </article>
+           <h1 class="header-center">Welcome in Bazaar! </h1>
+      </div>
+    </article>
 
-<!--        <div class="content-section">-->
-<!--          <div class="media">-->
+    <script type="text/javascript" >
 
-<!--            <div class="media-body">-->
-<!--              <h2 class="account-heading">Username</h2>-->
-<!--              <p class="text-secondary">username@email.com</p>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          &lt;!&ndash; FORM HERE &ndash;&gt;-->
-<!--        </div>-->
-    {% endfor %}
+
+    var today = new Date();
+
+    var day = today.getDate();
+    var month = today.getMonth()+1;
+    var year = today.getFullYear();
+
+    var hour = today.getHours();
+    if (hour<10) hour = "0"+hour;
+
+    var minute = today.getMinutes();
+    if (minute<10) minute = "0"+minute;
+
+    var second = today.getSeconds();
+    if (second<10) second = "0"+second;
+
+    var cont = document.getElementsByClassName('#time_left');
+    var dis = "Remaining time to the end of auction: "+
+    day+"/"+month+"/"+year+" | "+hour+":"+minute+":"+second;
+    cont.innerHTML = dis
+
+ //  document.getElementsByClassName("aas").innerHTML = "Remaining time to the end of auction: "+
+ //   day+"/"+month+"/"+year+" | "+hour+":"+minute+":"+second;
+
+ /   $('#' + $item_id).innerHTML="Remaining time to the end of auction: "+
+//    day+"/"+month+"/"+year+" | "+hour+":"+minute+":"+second;
+//      return "Remaining time "+
+//     day+"/"+month+"/"+year+" | "+hour+":"+minute+":"+second);
+//    setTimeout("end_of_auction()",1000);
+
+
+    </script>
+
+  {% for post in posts %}
+    <article class="media content-section">
+
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="{% url 'merchant-items' post.merchant.username %}">{{ post.merchant }}</a>
+          <small class="mr-3">{{ post.date_posted|date:"d F Y" }}</small>
+        </div>
+        <div class="media content">
+        <img class="circle account-img" src="{{ post.main_image.url }}">
+ <div class="media-body">
+        <h3><a class="article-title" href="{% url 'item-detail' post.id %}">{{ post.title }}</a></h3>
+        <h2 class="article-title">${{ post.price }}</h2>
+<!--        <h4 class="article-title">Remaining time to the end of the auction:{{ post.remaining_time }}</h4>-->
+<!--        <script type="text/javascript">end_of_auction({{item.id}}) </script>-->
+    {% if post.end_of_auction|left_time == 0 %}
+          <small class="mr-3 text-danger" > The auction has ended. </small>
+     {% else %}
+     <small class="mr-3 text-info"> {{ post.end_of_auction|left_time }} </small>
+    {% endif %}
+ </div>
+ </div>
+ </div>
+
+    </article>
+
+  {% endfor %}
+
     {% if is_paginated %}
 
       {% if page_obj.has_previous %}
@@ -52,4 +93,5 @@
     {% endif %}
 
     {% endif %}
+
 {% endblock content %}

@@ -13,28 +13,53 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .bg-steel {
-  background-color: #1E90FF;
+    background: white url("images/bg_navbar.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    opacity: 0.65;
+}
+
+.dj-bazaar-dropdown {
+    background-color: transparent;
+    color: white;
+    text-weight: 900;
+    border-color: transparent;
+}
+
+.dj-bazaar-dropdown:hover {
+    background-color: black;
+    color: #ffcc00;
+    border-color: transparent;
+    opacity: 0.7;
 }
 
 .site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+  color: #99ffb8;
 }
 
 .site-header .navbar-nav .nav-link:hover {
-  color: #99ffb8;
+  color: #005ce6;
 }
 
 .site-header .navbar-nav .nav-link.active {
   font-weight: 500;
 }
 
+.navbar-nav {
+  text-align: right;
+  font-weight: bold;
+  line-height: 70%;
+}
 .content-section {
   background: rgba(235, 255, 87, 0.3);
   padding: 10px 20px;
   border: 1px solid #0095ff;
   border-radius: 3px;
-  margin-bottom: 20px;
-  margin-top: 40px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  clear:both;
 }
 
 .article-title {
@@ -42,7 +67,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a.article-title:hover {
-  color: #000000;
+  color: #0047b3;
   text-decoration: none;
 }
 
@@ -85,7 +110,12 @@ a.article-title:hover {
 }
 
 .list-group {
-  background-color: (255, 255, 0, 0.25);
+  background-color: rgba(255, 255, 0, 0.25);
+    color: rgba(0, 0, 0, 0)
+}
+
+.content-section-list-group {
+  background-color: rgba(255, 255, 220, 0.25);
 }
 
 .transparent-input {
@@ -97,17 +127,128 @@ a.article-title:hover {
   text-align: center;
 }
 
-.fieldform {
-   background-color: rgba(0, 0, 0, 0) !important;
+.centering {
+    align:center;
+    text-align:center;
+    margin: auto;
+    clear:both;
+}
+
+.fieldform{
+   background-color: rgba(110, 100, 0, 0) !important;
    border:none;
 }
 
-.gallery {
-  margin-top: 20px;
-  margin-bottom: 20px;
+/* semi photo gallery */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 180px;
 }
 
-.gallery .img-thumbnail {
+.dropdown-gallery {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-gallery {
+  display: block;
+}
+
+div.dropdown:hover {
+  border: 1px solid #777;
+}
+
+div.dropdown img {
     width:auto;
     height:auto;
+}
+
+.dropdown .img-thumbnail {
+    width:auto;
+    height:auto;
+}
+
+
+/* photo gallery */
+* {
+  box-sizing: border-box;
+}
+
+/* line 12, ../sass/demo.scss */
+a {
+  color: #4ab19a;
+}
+
+/* line 16, ../sass/demo.scss */
+.clear {
+  clear: both;
+  float: none;
+  width: 100%;
+}
+
+/* line 22, ../sass/demo.scss */
+.container {
+  max-width: 1170px;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+/* line 32, ../sass/demo.scss */
+.container .gallery a img {
+  float: left;
+  width: 20%;
+  height: auto;
+  border: 2px solid #fff;
+  -webkit-transition: -webkit-transform .15s ease;
+  -moz-transition: -moz-transform .15s ease;
+  -o-transition: -o-transform .15s ease;
+  -ms-transition: -ms-transform .15s ease;
+  transition: transform .15s ease;
+  position: relative;
+}
+/* line 46, ../sass/demo.scss */
+.container .gallery a:hover img {
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  -o-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  transform: scale(1.05);
+  z-index: 5;
+}
+/* line 57, ../sass/demo.scss */
+.container .gallery a.big img {
+  width: 40%;
+}
+
+/* line 65, ../sass/demo.scss */
+.align-center {
+  text-align: center;
+}
+
+/* Table using in bids item_detail*/
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid rgb(41, 106, 252);
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(235, 255, 87, 0.3);
 }

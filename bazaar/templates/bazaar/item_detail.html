@@ -1,56 +1,89 @@
 {% extends "bazaar/base.html" %}
+{% load bazaar_tags %}
 {% block content %}
-    <h1> {{ object.title }}</h1>
-        <article class="media content-section">
-          <img class="circle account-img" src="{{ object.main_image.url }}">
+
+<article class="media content-section">
+
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="{% url 'merchant-items' item.merchant.username %}">{{ item.merchant }}</a>
+      <small class="mr-3">{{ item.date_posted|date:"d F Y" }}</small>
+        {% if item.merchant == user %}
+          <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'item-update' item.id %}">Edit</a>
+          <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'item-delete' item.id %}">Delete</a>
+        {% endif %}
+    </div>
+    <div class="media content">
+      <img class="circle account-img" src="{{ item.main_image.url }}">
+      <div class="media-body">
+          <h3>{{ item.title }}</h3>
           <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{% url 'merchant-items' object.merchant.username %}">{{ object.author }}</a>
-              <small class="text-muted">{{ object.date_posted|date:"d F Y" }}</small>
-                {% if object.merchant == user %}
-                  <div class="form-group">
-                    <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'item-update' object.id %}">Edit</a>
-                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'item-delete' object.id %}">Delete</a>
-                  </div>
-                {% endif %}
-            </div>
-            <h2 class="article-title">{{ object.title }}</h2>
-            <h3 class="article-title">${{ object.price }}</h3>
-            <p class="article-content">{{ object.description }}</p>
-          </div>
-<!--            {% for object.item_image in object.item_images %}-->
-<!--               {% if object.item_image %}-->
-<!--                   <div>-->
-<!--                      <a href="#" class="image"><img src="{{ object.item_image.image.url }}"></a>-->
-<!--                   </div>-->
-<!--                {% endif %}-->
-<!--            {% endfor %}-->
-
-
-        </article>
-
-
-          <div class="row gallery">
-            {% for p in object.item_image_set.all %}
-            {% if p.image %}
-              <div class="col-md-6">
-                <img src="{{ p.image.url }}" alt="Image Not Found" class="img-thumbnail">
-              </div>
+            {% if item.merchant != user and item.end_of_auction|left_time != 0 %}
+              <a class="btn btn-warning" href="{% url 'bidding' item.id %}">Bid</a>
             {% endif %}
-            {% endfor %}
+              <h2 class="article-title" style="float: left;" >${{ item.price }} &nbsp; </h2>
           </div>
-<!--    {% for post in posts %}-->
-<!---->
-<!---->
-<!--        <div class="content-section">-->
-<!--          <div class="media">-->
+          <div style="clear: both;">
+          {% if item.end_of_auction|left_time == 0 %}
+            <small class="mr-3 text-danger" > The auction has ended. </small>
+          {% else %}
+            <small class="mr-3 text-info"> {{ item.end_of_auction|left_time }} </small>
+          {% endif %}
+          </div>
+      </div>
+    </div>
+      <p class="article-content">{{ item.description }}</p>
+  </div>
 
-<!--            <div class="media-body">-->
-<!--              <h2 class="account-heading">Username</h2>-->
-<!--              <p class="text-secondary">username@email.com</p>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          &lt;!&ndash; FORM HERE &ndash;&gt;-->
-<!--        </div>-->
-<!--    {% endfor %}-->
+</article>
+
+{% for p in item.item_image_set.all %}
+{% if p.image %}
+    <div class="dropdown ">
+      <a target="_blank"  href="{{ p.image.url }}" >
+        <img src="{{ p.image.url }}" alt="Image Not Found"  class="img-thumbnail">
+      </a>
+
+      <div class="dropdown-gallery centering">
+        <img src="{{ p.image.url }}" alt="Image Not Found" >
+      </div>
+    </div>
+
+{% endif %}
+{% endfor %}
+
+{% if bids %}
+<article class="media content-section centering">
+    <div class ="centering">
+        <h2 class="header-center">Purchase offers</h2>
+        <table>
+          <tr>
+            <th>Merchant</th>
+            <th>Price</th>
+            <th>Date</th>
+          </tr>
+           {% for bid in bids %}
+              <tr>
+                <td> {{ bid.merchant }} </td>
+                <td> ${{ bid.bid }} </td>
+                <td> {{ bid.date|date:"d F Y, H:i:s" }} </td>
+              </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</article>
+{% endif %}
+
 {% endblock content %}
+
+
+
+{% block extra_js %}
+
+<!--	<script type='text/javascript'>-->
+<!--		$(document).ready(function() {-->
+<!--			$('.gallery a').simpleLightbox();-->
+<!--		});-->
+<!--	</script>-->
+{% endblock extra_js %}
