@@ -194,6 +194,9 @@ class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
 def about(request):
     return render(request, 'bazaar/about.html', {'title': 'about'})
 
+def timer(request):
+    return render(request, 'bazaar/timer.html')
+
 # def edit_item(request, item_id):
 #     question = get_object_or_404(Question, pk = item_id)
 #     try:

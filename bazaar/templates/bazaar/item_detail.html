@@ -27,13 +27,15 @@
           {% if item.end_of_auction|left_time == 0 %}
             <small class="mr-3 text-danger" > The auction has ended. </small>
           {% else %}
-            <small class="mr-3 text-info"> {{ item.end_of_auction|left_time }} </small>
+            <small class="mr-3 text-info timer"></small>
           {% endif %}
           </div>
       </div>
     </div>
       <p class="article-content">{{ item.description }}</p>
   </div>
+
+
 
 </article>
 
@@ -80,10 +82,37 @@
 
 
 {% block extra_js %}
+<script type="text/javascript">
+ $( document ).each(
+    setInterval(
+    function() {
+		var today = new Date();
+        var end_of_auction = new Date( "{{ item.end_of_auction.isoformat }}" );
 
-<!--	<script type='text/javascript'>-->
-<!--		$(document).ready(function() {-->
-<!--			$('.gallery a').simpleLightbox();-->
-<!--		});-->
-<!--	</script>-->
+        var left_time_seconds =  Math.floor((end_of_auction - today)/1000);
+        var left_time_days = Math.floor( (left_time_seconds )/(3600*24) );
+        var left_time_hours = Math.floor( (left_time_seconds %(24*3600) )/3600 );
+        var left_time_minutes = Math.floor( (left_time_seconds % 3600)/60 );
+        var left_time_seconds =  Math.floor( (left_time_seconds )%(60) );
+
+		var godzina = today.getHours();
+		if (godzina<10) godzina = "0"+godzina;
+
+		if (left_time_minutes<10) left_time_minutes = "0"+left_time_minutes;
+
+		if (left_time_seconds<10) left_time_seconds = "0"+left_time_seconds;
+
+      if ( left_time_days > 1 ) {
+        var answer = "To the end " + left_time_days + " days left.";
+      } else if (left_time_days == 1){
+        var answer = "To the end 1 day left.";
+      } else {
+      var answer =  "Auction ends in " + left_time_hours + ":"
+      + left_time_minutes + ":" + left_time_seconds;
+      }
+		$('.timer').html( answer );
+
+	    }, 1000)
+    );
+    </script>
 {% endblock extra_js %}

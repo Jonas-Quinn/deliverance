@@ -25,7 +25,6 @@ class Item(models.Model):
     title         = models.CharField(max_length=200)
     description   = models.TextField(default='')
     date_posted   = models.DateTimeField('date published', auto_now_add=True)
-
     price         = models.DecimalField(
         'price', max_digits=8, decimal_places=2, default=0,
         validators=[MinValueValidator(0, "Are you OK?! Price can\'t be lesser than %(limit_value)s!")]
@@ -57,8 +56,8 @@ class Item(models.Model):
         return reverse('item-detail', kwargs={'pk': self.pk})
 
     def remaining_time(self):
-        if (self.end_of_auction - self.date_posted).days > 0:
-            return (self.end_of_auction - self.date_posted).days
+        # if (self.end_of_auction - self.date_posted).days > 0:
+        return ( self.end_of_auction - timezone.now() ).days
 
     remaining_time.admin_order_field = 'remaining_time'
     remaining_time.short_description = 'How much time is left?'

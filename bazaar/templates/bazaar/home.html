@@ -9,40 +9,7 @@
       </div>
     </article>
 
-    <script type="text/javascript" >
 
-
-    var today = new Date();
-
-    var day = today.getDate();
-    var month = today.getMonth()+1;
-    var year = today.getFullYear();
-
-    var hour = today.getHours();
-    if (hour<10) hour = "0"+hour;
-
-    var minute = today.getMinutes();
-    if (minute<10) minute = "0"+minute;
-
-    var second = today.getSeconds();
-    if (second<10) second = "0"+second;
-
-    var cont = document.getElementsByClassName('#time_left');
-    var dis = "Remaining time to the end of auction: "+
-    day+"/"+month+"/"+year+" | "+hour+":"+minute+":"+second;
-    cont.innerHTML = dis
-
- //  document.getElementsByClassName("aas").innerHTML = "Remaining time to the end of auction: "+
- //   day+"/"+month+"/"+year+" | "+hour+":"+minute+":"+second;
-
- /   $('#' + $item_id).innerHTML="Remaining time to the end of auction: "+
-//    day+"/"+month+"/"+year+" | "+hour+":"+minute+":"+second;
-//      return "Remaining time "+
-//     day+"/"+month+"/"+year+" | "+hour+":"+minute+":"+second);
-//    setTimeout("end_of_auction()",1000);
-
-
-    </script>
 
   {% for post in posts %}
     <article class="media content-section">
@@ -60,9 +27,9 @@
 <!--        <h4 class="article-title">Remaining time to the end of the auction:{{ post.remaining_time }}</h4>-->
 <!--        <script type="text/javascript">end_of_auction({{item.id}}) </script>-->
     {% if post.end_of_auction|left_time == 0 %}
-          <small class="mr-3 text-danger" > The auction has ended. </small>
+          <small class="mr-3 text-danger"> The auction has ended. </small>
      {% else %}
-     <small class="mr-3 text-info"> {{ post.end_of_auction|left_time }} </small>
+     <small class="mr-3 text-info zegar" id="post_{{ post.id }}" start="{{ post.end_of_auction.isoformat }}">  </small>
     {% endif %}
  </div>
  </div>
@@ -95,3 +62,43 @@
     {% endif %}
 
 {% endblock content %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+    $( document ).each(
+    setInterval(
+    function() {
+    {% for post in posts %}
+		$('#post_{{ post.id }}').each(function(){
+
+		    var today = new Date();
+		    var end_of_auction =new Date( $(this).attr('start') );
+		    var left_time_seconds =  Math.floor((end_of_auction - today)/1000);
+            var left_time_days = Math.floor( (left_time_seconds )/(3600*24) );
+            var left_time_hours = Math.floor( (left_time_seconds %(24*3600) )/3600 );
+            var left_time_minutes = Math.floor( (left_time_seconds % 3600)/60 );
+            var left_time_seconds =  Math.floor( (left_time_seconds )%(60) );
+
+            var godzina = today.getHours();
+            if (godzina<10) godzina = "0"+godzina;
+
+            if (left_time_minutes<10) left_time_minutes = "0"+left_time_minutes;
+
+            if (left_time_seconds<10) left_time_seconds = "0"+left_time_seconds;
+
+          if ( left_time_days > 1 ) {
+            var answer = "To the end " + left_time_days + " days left.";
+          } else if (left_time_days == 1){
+            var answer = "To the end 1 day left.";
+          } else {
+          var answer =  "Auction ends in " + left_time_hours + ":"
+          + left_time_minutes + ":" + left_time_seconds;
+          }
+		    $('#post_{{ post.id }}').html( answer );
+		});
+	{% endfor %}
+
+	    }, 1000)
+    );
+    </script>
+{% endblock extra_js %}

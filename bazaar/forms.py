@@ -26,9 +26,9 @@ class ItemCreateForm(forms.ModelForm):
             'end_of_auction',
             'main_image',
         )
-        widgets = {'end_of_auction': DateInput(
-            attrs={ 'type': 'date'},
-            format='%d-%m-%Y %H:%M')}
+        # widgets = {'end_of_auction': DateInput(
+        #     attrs={ 'type': 'date'},
+        #     format='%d-%m-%Y %H:%M')}
 
 
     # def __init__(self, *args, **kwargs):
