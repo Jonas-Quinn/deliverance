@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import (
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.forms import modelformset_factory
+from django.forms import inlineformset_factory, modelformset_factory
 from .decorators import active_auction
 from .forms import *
 # Create your views here.
@@ -28,7 +28,7 @@ class ItemListView(generic.ListView):
     template_name = 'bazaar/home.html' # <APP>/<MODEL>_<VIEWTYPE>.HTML
     context_object_name = 'posts'  # def: home
     ordering = '-date_posted'
-    paginate_by = 3
+    paginate_by = 4
 
 class MerchantItemListView(generic.ListView):
     model = Item
@@ -40,6 +40,16 @@ class MerchantItemListView(generic.ListView):
     def get_queryset(self):
         user = get_object_or_404(User, username = self.kwargs.get('username'))
         return Item.objects.filter(merchant=user).order_by('-date_posted')
+
+class MerchantBidListView(generic.ListView):
+    model = Bid
+    template_name = 'bazaar/merchant_bids.html' # <APP>/<MODEL>_<VIEWTYPE>.HTML
+    context_object_name = 'bids'  # def: home
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username = self.kwargs.get('username'))
+        # item = Item.objects.filter(merchant=user)
+        return Bid.objects.filter(merchant=user).order_by('-date')
 
 class ItemDetailView(generic.DetailView):
     model = Item
@@ -119,24 +129,29 @@ def bidding(request, pk):
 
     context = {
         'form': form,
+        'item': item,
     }
     return render(request, 'bazaar/bidding.html', context)
 
 
 @login_required
 def item_create(request):
-    ImageFormset = modelformset_factory(Item_Image, fields=('image',), extra=3)
+    ImageFormset = modelformset_factory(Item_Image, fields=('image',), extra=4, max_num=5)
     if request.method == 'POST':
         form = ItemCreateForm(request.POST, request.FILES)
-        formset = ImageFormset(request.POST, request.FILES)
+        formset = ImageFormset(request.POST or None, request.FILES or None)
         if form.is_valid() and formset.is_valid():
             item = form.save(commit=False)
             item.merchant = request.user
             item.save()
-
+            print(formset.cleaned_data)
             for f in formset:
+
+                print(request.POST)
+                print(request.FILES)
                 try:
-                    photo = Item_Image(item=item, image=f.cleaned_data.get('image'))
+                    print(5)
+                    photo = Item_Image(item=item, image=f.cleaned_data['image'])
                     photo.save()
                 except Exception as e:
                     break

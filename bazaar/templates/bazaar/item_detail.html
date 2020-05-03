@@ -14,22 +14,45 @@
         {% endif %}
     </div>
     <div class="media content">
-      <img class="circle account-img" src="{{ item.main_image.url }}">
+        <div class="square">
+            <img class="landscape" src="{{ item.main_image.url }}">
+        </div>
       <div class="media-body">
           <h3>{{ item.title }}</h3>
           <div class="media-body">
             {% if item.merchant != user and item.end_of_auction|left_time != 0 %}
-              <a class="btn btn-warning" href="{% url 'bidding' item.id %}">Bid</a>
+              <a class="btn btn-warning" href="{% url 'bidding' item.id %}">Place bid</a>
             {% endif %}
               <h2 class="article-title" style="float: left;" >${{ item.price }} &nbsp; </h2>
           </div>
-          <div style="clear: both;">
-          {% if item.end_of_auction|left_time == 0 %}
-            <small class="mr-3 text-danger" > The auction has ended. </small>
-          {% else %}
-            <small class="mr-3 text-info timer"></small>
-          {% endif %}
-          </div>
+      <div style="clear: both;"></div>
+
+        <table class="content-table">
+          <tr class="content-table">
+            <th class="content-table">
+                <small>{{ item.get_condition_display }}</small>
+            </th>
+            <th class="content-table">
+              {% if item.end_of_auction|left_time == 0 %}
+                <small class="mr-3 text-danger" > The auction has ended. </small>
+              {% else %}
+                <small class="mr-3 text-info timer"></small>
+              {% endif %}
+            </th>
+          </tr>
+          <tr class="content-table">
+            <td class="content-table">
+                <small>{{ item|number_of_bids }}</small>
+            </td>
+            <td class="content-table">
+              {% if item.end_of_auction|left_time == 0 %}
+                <small class="mr-3 text-danger">({{ item.end_of_auction|date:"d.m.Y, H:i:s" }})</small>
+              {% else %}
+                <small class="mr-3 text-info">({{ item.end_of_auction|date:"d.m.Y, H:i:s" }})</small>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
       <p class="article-content">{{ item.description }}</p>
@@ -42,13 +65,10 @@
 {% for p in item.item_image_set.all %}
 {% if p.image %}
     <div class="dropdown ">
-      <a target="_blank"  href="{{ p.image.url }}" >
-        <img src="{{ p.image.url }}" alt="Image Not Found"  class="img-thumbnail">
+      <a target="_blank"  href="{{ p.image.url }}" data-lightbox="mygallery" >
+        <img src="{{ p.image.url }}" alt="Image Not Found"  class="img-fluid img-thumbnail portrait">
       </a>
 
-      <div class="dropdown-gallery centering">
-        <img src="{{ p.image.url }}" alt="Image Not Found" >
-      </div>
     </div>
 
 {% endif %}
@@ -65,7 +85,7 @@
             <th>Date</th>
           </tr>
            {% for bid in bids %}
-              <tr>
+              <tr class="bid-tr">
                 <td> {{ bid.merchant }} </td>
                 <td> ${{ bid.bid }} </td>
                 <td> {{ bid.date|date:"d F Y, H:i:s" }} </td>
@@ -114,5 +134,9 @@
 
 	    }, 1000)
     );
+
+
+})
+
     </script>
 {% endblock extra_js %}

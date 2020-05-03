@@ -1,4 +1,5 @@
 {% extends "bazaar/base.html" %}
+{% load bazaar_tags %}
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
@@ -6,7 +7,27 @@
         {% csrf_token %}
         {{ form.as_p }}
 
-        <input type="submit" value="Bid" class="btn-block btn-warning">
+        <input type="submit" value="Place bid" class="btn-block btn-warning">
       </form>
     </div>
 {% endblock content %}
+
+
+
+{% block extra_js %}
+    <script>
+    const values = {
+      bid: {{ item.price|default_bid }},
+      b: 15
+    }
+
+    const keys = Object.keys(values)
+    const length = keys.length
+
+    for(let i = 0; i < length; i++){
+        const key = keys[i]
+        document.getElementsByName(key)[0].value = values[key]
+    }
+    window.onload = divideByFour;
+    </script>
+{% endblock extra_js %}

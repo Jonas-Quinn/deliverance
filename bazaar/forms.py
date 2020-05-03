@@ -5,46 +5,34 @@ from django.forms import DateTimeField
 from django.contrib.admin import widgets
 from django.core.validators import ValidationError, MinValueValidator
 import datetime
-
-class DateInput(forms.DateTimeInput):
-    input_type = 'date'
-
-
-class TimeInput(forms.TimeInput):
-    input_type = 'time'
-
+import decimal
 
 class ItemCreateForm(forms.ModelForm):
-    # end_of_auction_date = forms.DateField()
-    # end_of_auction_time = forms.TimeField()
     class Meta:
         model = Item
         fields = (
             'title',
             'description',
             'price',
+            'condition',
             'end_of_auction',
             'main_image',
         )
-        # widgets = {'end_of_auction': DateInput(
-        #     attrs={ 'type': 'date'},
-        #     format='%d-%m-%Y %H:%M')}
 
+class ItemImageForm(forms.ModelForm):
+    model = Item_Image
 
-    # def __init__(self, *args, **kwargs):
-    #     super(ItemCreateForm, self).__init__(*args, **kwargs)
-    #
-    #     if kwargs['instance']:
-    #         self.fields['end_of_auction_date'].initial = kwargs['instance'].end_of_auction.date()
-    #         self.fields['end_of_auction_time'].initial = kwargs['instance'].end_of_auction.time()
-    #
-    # def save(self, commit=True):
-    #     model = super(ItemCreateForm, self).save(commit=False)
-    #     model.end_of_auction = datetime.combine(self.cleaned_data['end_of_auction_date'], self.cleaned_data['end_of_auction_time'])
-    #     if commit:
-    #         model.save()
-    #
-    #     return model
+    def __init__(self, *args, **kwargs):
+        super(ItemImageForm, self).__init__(*args, **kwargs)
+
+        if 'instance' in kwargs:
+            item_image = kwargs['instance']
+
+        # to add an extra field, add something like this
+        self.fields['extra_field'] = forms.CharField(max_length=30)
+
+    class Meta:
+        fields = ('image',)
 
 
 class ItemEditForm(forms.ModelForm):
@@ -75,7 +63,7 @@ class BiddingForm(forms.ModelForm):
             raise forms.ValidationError("Please fill out missing field.")
 
         new_price = cd['bid']
-        if new_price <= self.old_price:
-            raise ValidationError("The new price must be at least 5% higher then previous.")
+        if new_price < round( self.old_price*decimal.Decimal(1.05), 2):
+            raise ValidationError("The new price must be at least 5% higher then the previous one.")
 
         return cd

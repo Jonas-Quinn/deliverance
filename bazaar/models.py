@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 import datetime
 from django.core.validators import MinValueValidator
@@ -37,6 +38,25 @@ class Item(models.Model):
             "You can\'t set end of auction in the past."
         )]
     )
+    class Condition(models.TextChoices):
+        NEW = 'NEW', _('New')
+        USED = 'USE', _('Used')
+        REFURBISHED = 'REF', _('Refurbished')
+        NOT_WORKING = 'NOT', _('For parts or not working')
+
+    #
+    # CONDITION_CHOICES = [
+    #     (NEW, 'New'),
+    #     (USED, 'Used'),
+    #     (REFURBISHED, 'Refurbished'),
+    #     (NOT_WORKING, 'For parts or not working'),
+    # ]
+    condition = models.CharField(
+        'condition',
+        max_length=3,
+        choices=Condition.choices,
+        default=Condition.USED,
+    )
 
     def __str__(self):
         return self.title
@@ -47,7 +67,7 @@ class Item(models.Model):
 
     main_image = models.ImageField(
         # 'main image', default='heroes3.png', upload_to=file_name, storage=S3Boto3Storage()
-        'main image', default='default_item.jpg', upload_to=get_path_for_my_model_file
+        'thumbnail', default='default_item.jpg', upload_to=get_path_for_my_model_file
         # 'main image', default='default_item.jpg', upload_to=file_name
     )
 

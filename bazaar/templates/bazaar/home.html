@@ -12,30 +12,50 @@
 
 
   {% for post in posts %}
-    <article class="media content-section">
+ <article class="media content-section">
 
-      <div class="media-body">
+ <div class="media-body">
         <div class="article-metadata">
           <a class="mr-2" href="{% url 'merchant-items' post.merchant.username %}">{{ post.merchant }}</a>
           <small class="mr-3">{{ post.date_posted|date:"d F Y" }}</small>
         </div>
-        <div class="media content">
-        <img class="circle account-img" src="{{ post.main_image.url }}">
- <div class="media-body">
+    <div class="media content" >
+        <div class="square">
+        <img class="landscape" src="{{ post.main_image.url }}">
+        </div>
+     <div class="media-body" >
         <h3><a class="article-title" href="{% url 'item-detail' post.id %}">{{ post.title }}</a></h3>
         <h2 class="article-title">${{ post.price }}</h2>
-<!--        <h4 class="article-title">Remaining time to the end of the auction:{{ post.remaining_time }}</h4>-->
-<!--        <script type="text/javascript">end_of_auction({{item.id}}) </script>-->
-    {% if post.end_of_auction|left_time == 0 %}
-          <small class="mr-3 text-danger"> The auction has ended. </small>
-     {% else %}
-     <small class="mr-3 text-info zegar" id="post_{{ post.id }}" start="{{ post.end_of_auction.isoformat }}">  </small>
-    {% endif %}
- </div>
- </div>
+        <table class="content-table">
+          <tr class="content-table">
+            <th class="content-table">
+                <small>{{ post.get_condition_display }}</small>
+            </th>
+            <th class="content-table">
+              {% if post.end_of_auction|left_time == 0 %}
+                <small class="mr-3 text-danger" > The auction has ended. </small>
+                {% else %}
+                <small class="mr-3 text-info" id="post_{{ post.id }}" start="{{ post.end_of_auction.isoformat }}"></small>
+              {% endif %}
+            </th>
+          </tr>
+          <tr class="content-table">
+            <td class="content-table">
+                <small>{{ post|number_of_bids }}</small>
+            </td>
+            <td class="content-table">
+              {% if post.end_of_auction|left_time == 0 %}
+                <small class="mr-3 text-danger">({{ post.end_of_auction|date:"d.m.Y, H:i:s" }})</small>
+              {% else %}
+                <small class="mr-3 text-info">({{ post.end_of_auction|date:"d.m.Y, H:i:s" }})</small>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+    </div>
  </div>
 
-    </article>
+ </article>
 
   {% endfor %}
 

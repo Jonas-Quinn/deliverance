@@ -2,10 +2,12 @@ from django import template
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import is_aware, make_aware
 from django.utils import timezone
+from bazaar import models
 from django.conf import settings
 from django.utils.timezone import is_aware, is_naive, make_aware, make_naive
 import dateutil.parser
 import datetime
+import decimal
 register = template.Library()
 
 
@@ -23,3 +25,17 @@ def left_time(date):
     return "To the end %s days left" %delta.days
 
 
+@register.filter
+def number_of_bids(item):
+    count = models.Bid.objects.filter(item=item).count()
+    if (count==1):
+        noun = "bid"
+    else:
+        noun = "bids"
+
+    return "%s %s" %(count, noun)
+
+@register.filter
+def default_bid(price):
+    new_price = round(price*decimal.Decimal(1.05), 2)
+    return new_price

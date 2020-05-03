@@ -1,15 +1,29 @@
 {% extends "bazaar/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="content-section">
+    <div class="content-section" id="form_set">
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         {{ formset.management_form }}
+
         {% for f in formset %}
           {{ f.as_p }}
         {% endfor %}
-        <input type="submit" value="Create" class="btn btn-outline-success">
+
+        <input type="submit" value="Create" class="btn btn-outline-success" >
+<!--        <input type="button" value="Add more images" id="add_more">-->
+<!--          -->
+<!--        </br>-->
+<!--        </br>-->
+<!--        <div id="empty_form" style="display:none">-->
+<!--            <table class='no_error'>-->
+<!--                {{ formset.empty_form.as_p }}-->
+<!--            </table>-->
+<!--        </div>-->
+<!--          <div>-->
+
+<!--          </div>-->
       </form>
     </div>
 {% endblock content %}
@@ -17,10 +31,30 @@
 
 {% block extra_js %}
     <script>
-      $(function () {
-        $("#id_end_of_auction").datetimepicker({
-           dateFormat: 'yy-mm-dd', controlType: 'select'
-        });
-      });
+    var form_count = {{ formset.total_form_count }};
+    $('#add_form').click(function() {
+        form_count++;
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_count));
+        $('#id_form-TOTAL_FORMS').val(form_count);
+    });
+
+
+    $('#add_more').click(function() {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        if ( parseInt(form_idx)  < 6) {
+            $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        }
+        else{
+            alert("You can upload at most 5 images.");
+        }
+    });
+
+
+
+    $(function () {
+
+      $("#datetime").datetimepicker();
+    });
     </script>
 {% endblock extra_js %}

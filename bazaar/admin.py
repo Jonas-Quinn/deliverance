@@ -16,7 +16,7 @@ class ItemAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,   {'fields': ['title']}),
         (None,  {'fields': ['description']}),
-        ('Date information', {'fields': ['date_posted'], 'classes': ['collapse']}),
+        ('Date information', {'fields': ['end_of_auction'], 'classes': ['collapse']}),
     ]
     inlines = [PicsInline]
     list_display = ('title', 'merchant', 'date_posted', 'remaining_time')

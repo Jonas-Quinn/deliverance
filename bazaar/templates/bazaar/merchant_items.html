@@ -1,7 +1,7 @@
 {% extends "bazaar/base.html" %}
 {% block content %}
     <article class="media content-section">
-        <h2 class="header-center"> Auctions by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h2>
+        <h2 class="header-center centering"> Auctions by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h2>
     </article>
     {% for post in posts %}
         <a class="article-title" href="{% url 'item-detail' post.id %}">
@@ -18,16 +18,6 @@
             </article>
         </a>
 
-<!--        <div class="content-section">-->
-<!--          <div class="media">-->
-
-<!--            <div class="media-body">-->
-<!--              <h2 class="account-heading">Username</h2>-->
-<!--              <p class="text-secondary">username@email.com</p>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          &lt;!&ndash; FORM HERE &ndash;&gt;-->
-<!--        </div>-->
     {% endfor %}
     {% if is_paginated %}
 
