@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.forms import DateTimeField
 from django.contrib.admin import widgets
 from django.core.validators import ValidationError, MinValueValidator
+from crispy_forms.helper import FormHelper
 import datetime
 import decimal
 
@@ -14,10 +15,25 @@ class ItemCreateForm(forms.ModelForm):
             'title',
             'description',
             'price',
-            'condition',
             'end_of_auction',
+            'condition',
             'main_image',
         )
+        widgets = {
+            'end_of_auction': forms.DateTimeInput( attrs={'class': 'cosmicbutton',} ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ItemCreateForm, self ).__init__( *args, **kwargs )
+        self.fields['end_of_auction'].label = ""
+
+class ItemCreateDatetimeForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = (
+            'end_of_auction',
+        )
+
 
 class ItemImageForm(forms.ModelForm):
     model = Item_Image

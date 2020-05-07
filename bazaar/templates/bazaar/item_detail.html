@@ -15,13 +15,15 @@
     </div>
     <div class="media content">
         <div class="square">
-            <img class="landscape" src="{{ item.main_image.url }}">
+           <a target="_blank"  href="{{ item.main_image.url }}" data-lightbox="mygallery" >
+             <img class="landscape" src="{{ item.main_image.url }}">
+           </a>
         </div>
       <div class="media-body">
           <h3>{{ item.title }}</h3>
           <div class="media-body">
             {% if item.merchant != user and item.end_of_auction|left_time != 0 %}
-              <a class="btn btn-warning" href="{% url 'bidding' item.id %}">Place bid</a>
+              <a class="btn btn-warning rotation cosmicbutton" href="{% url 'bidding' item.id %}">Place bid</a>
             {% endif %}
               <h2 class="article-title" style="float: left;" >${{ item.price }} &nbsp; </h2>
           </div>
@@ -36,7 +38,7 @@
               {% if item.end_of_auction|left_time == 0 %}
                 <small class="mr-3 text-danger" > The auction has ended. </small>
               {% else %}
-                <small class="mr-3 text-info timer"></small>
+                <small class="mr-3 text-info timer"></small> <!-- javascript timer-->
               {% endif %}
             </th>
           </tr>
@@ -55,22 +57,18 @@
         </table>
       </div>
     </div>
-      <p class="article-content">{{ item.description }}</p>
+    <div class="article-description" >Description</div>
+    <p class="article-content">{{ item.description }}</p>
   </div>
-
-
-
 </article>
 
 {% for p in item.item_image_set.all %}
 {% if p.image %}
-    <div class="dropdown ">
+    <div class="dropdown">
       <a target="_blank"  href="{{ p.image.url }}" data-lightbox="mygallery" >
         <img src="{{ p.image.url }}" alt="Image Not Found"  class="img-fluid img-thumbnail portrait">
       </a>
-
     </div>
-
 {% endif %}
 {% endfor %}
 
@@ -81,8 +79,8 @@
         <table>
           <tr>
             <th>Merchant</th>
-            <th>Price</th>
-            <th>Date</th>
+            <th>Bid Amount</th>
+            <th>Bid Time</th>
           </tr>
            {% for bid in bids %}
               <tr class="bid-tr">
@@ -93,7 +91,6 @@
             {% endfor %}
         </table>
     </div>
-
 </article>
 {% endif %}
 
@@ -132,11 +129,8 @@
       }
 		$('.timer').html( answer );
 
-	    }, 1000)
-    );
-
-
-})
+    }, 1000)
+);
 
     </script>
 {% endblock extra_js %}

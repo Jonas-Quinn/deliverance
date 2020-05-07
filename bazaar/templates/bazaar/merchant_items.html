@@ -1,23 +1,67 @@
 {% extends "bazaar/base.html" %}
+{% load bazaar_tags %}
+
 {% block content %}
+    {% if not posts %}
+     <article class="media content-section">
+        <div class="centering">
+            <h2 class="card-title">There are no auctions by {{ view.kwargs.username }}</h2>
+        </div>
+     </article>
+    {% else %}
     <article class="media content-section">
         <h2 class="header-center centering"> Auctions by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h2>
     </article>
+    {% endif %}
     {% for post in posts %}
-        <a class="article-title" href="{% url 'item-detail' post.id %}">
-            <article class="media content-section">
-              <img class="circle account-img" src="{{ post.main_image.url }}">
-              <div class="media-body">
-                <div class="article-metadata">
-                  <a class="mr-2" href="{% url 'merchant-items' post.merchant.username %}">{{ post.merchant }}</a>
-                  <small class="text">{{ post.date_posted|date:"d F Y" }}</small>
-                </div>
-                  <h3 ><a class="article-title" href="{% url 'item-detail' post.id %}">{{ post.title }}</a></h3>
-                <h2 class="article-title">${{ post.price }}</h2>
-              </div>
-            </article>
-        </a>
 
+ <article class="media content-section">
+
+ <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="{% url 'merchant-items' post.merchant.username %}">{{ post.merchant }}</a>
+          <small class="mr-3">{{ post.date_posted|date:"d F Y" }}</small>
+        </div>
+    <div class="media content" >
+        <div class="square">
+          <a class="article-title" href="{% url 'item-detail' post.id %}">
+            <img class="landscape" src="{{ post.main_image.url }}">
+          </a>
+        </div>
+      <div class="media-body" >
+        <h3><a class="article-title" href="{% url 'item-detail' post.id %}">{{ post.title }}</a></h3>
+        <h2 class="article-title">${{ post.price }}</h2>
+        <table class="content-table">
+          <tr class="content-table">
+            <th class="content-table">
+                <small>{{ post.get_condition_display }}</small>
+            </th>
+            <th class="content-table" style="width: 50%;">
+              {% if post.end_of_auction|left_time == 0 %}
+                <small class="mr-3 text-danger" > The auction has ended. </small>
+                {% else %}
+                <small class="mr-3 text-info" id="post_{{ post.id }}" start="{{ post.end_of_auction.isoformat }}"></small>
+              {% endif %}
+            </th>
+          </tr>
+          <tr class="content-table">
+            <td class="content-table">
+                <small>{{ post|number_of_bids }}</small>
+            </td>
+            <td class="content-table">
+              {% if post.end_of_auction|left_time == 0 %}
+                <small class="mr-3 text-danger">({{ post.end_of_auction|date:"d.m.Y, H:i:s" }})</small>
+              {% else %}
+                <small class="mr-3 text-info">({{ post.end_of_auction|date:"d.m.Y, H:i:s" }})</small>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+ </div>
+
+ </article>
     {% endfor %}
     {% if is_paginated %}
 
@@ -41,3 +85,45 @@
 
     {% endif %}
 {% endblock content %}
+
+
+{% block extra_js %}
+<script type="text/javascript">
+
+$( document ).each(
+
+setInterval(
+function() {
+{% for post in posts %}
+
+    $('#post_{{ post.id }}').each(function(){
+        var today = new Date();
+        var end_of_auction =new Date( $(this).attr('start') );
+        var left_time_seconds =  Math.floor((end_of_auction - today)/1000);
+        var left_time_days = Math.floor( (left_time_seconds )/(3600*24) );
+        var left_time_hours = Math.floor( (left_time_seconds %(24*3600) )/3600 );
+        var left_time_minutes = Math.floor( (left_time_seconds % 3600)/60 );
+        var left_time_seconds =  Math.floor( (left_time_seconds )%(60) );
+
+        var godzina = today.getHours();
+        if (godzina<10) godzina = "0"+godzina;
+
+        if (left_time_minutes<10) left_time_minutes = "0"+left_time_minutes;
+
+        if (left_time_seconds<10) left_time_seconds = "0"+left_time_seconds;
+
+      if ( left_time_days > 1 ) {
+        var answer = "To the end " + left_time_days + " days left.";
+      } else if (left_time_days == 1){
+        var answer = "To the end 1 day left.";
+      } else {
+      var answer =  "Auction ends in " + left_time_hours + ":"
+      + left_time_minutes + ":" + left_time_seconds;
+      }
+        $('#post_{{ post.id }}').html( answer );
+    });
+{% endfor %}
+    }, 1000)
+);
+</script>
+{% endblock extra_js %}

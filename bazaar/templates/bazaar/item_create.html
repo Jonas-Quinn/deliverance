@@ -1,30 +1,46 @@
 {% extends "bazaar/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<!--          {{ form.end_of_auction|as_crispy_field }}-->
+
     <div class="content-section" id="form_set">
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        {{ formset.management_form }}
+            <label style="padding: 10px;">Title: </label><br/>
+            <p style="margin-left: 10px;">{{ form.title }}</p>
 
+          <label style="margin-left: 10px;">Description: </label><br/>
+          <p style="margin-left: 10px;">{{ form.description }}</p>
+            <label style="padding: 10px;">Price: </label>
+          {{ form.price }}
+
+        <br/>
+          <label style="padding: 10px;" >End of auction: </label>
+        <div style="padding: 10px;" class="input-group date" id="id_end_of_auction" data-target-input="nearest" style="clear: both;">
+            {{ form.end_of_auction|as_crispy_field }}
+            <div class="input-group-append" data-target="#id_end_of_auction" data-toggle="datetimepicker">
+                <div class="input-group-text cosmicbutton" style="height: 38px; width: 40px;"><i class="fa fa-calendar"></i></div>
+            </div>
+        </div>
+
+            <label style="padding: 10px;">Condition: </label>
+            {{ form.condition }}
+
+          <br/>
+          <label style="padding: 10px;">Thumbnail: </label>
+            {{ form.main_image }}
+         <br/>
+
+        {{ formset.management_form }}
+        <div style="margin-left: 10px;">
         {% for f in formset %}
           {{ f.as_p }}
         {% endfor %}
+        </div>
+        <input style="margin-left: 10px;" type="submit" value="Create" class="btn btn-outline-success cosmicbutton">
 
-        <input type="submit" value="Create" class="btn btn-outline-success" >
-<!--        <input type="button" value="Add more images" id="add_more">-->
-<!--          -->
-<!--        </br>-->
-<!--        </br>-->
-<!--        <div id="empty_form" style="display:none">-->
-<!--            <table class='no_error'>-->
-<!--                {{ formset.empty_form.as_p }}-->
-<!--            </table>-->
-<!--        </div>-->
-<!--          <div>-->
-
-<!--          </div>-->
       </form>
+
     </div>
 {% endblock content %}
 
@@ -50,11 +66,10 @@
         }
     });
 
-
-
-    $(function () {
-
-      $("#datetime").datetimepicker();
-    });
+     $(function () {
+        $("#id_end_of_auction").datetimepicker(
+        {format: "Y-MM-D HH:mm:ss"}
+        );
+      });
     </script>
 {% endblock extra_js %}

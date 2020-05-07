@@ -108,8 +108,8 @@ class Item_Image(models.Model):
 
 
 class Bid(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    merchant = models.ForeignKey(User, models.SET_NULL, blank=True, null=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='item_id')
+    merchant = models.ForeignKey(User, models.SET_NULL, blank=True, null=True, related_name='user_bid_id')
     bid = models.DecimalField(
         'new price', max_digits=8, decimal_places=2, default=0,
         validators=[MinValueValidator(0, "Are you OK?! Price can\'t be lesser than %(limit_value)s!")]

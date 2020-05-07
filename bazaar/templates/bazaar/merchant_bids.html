@@ -5,21 +5,51 @@
         <h2 class="header-center">Your bids</h2>
         <table>
           <tr>
-            <th>Item</th>
+              <th>Item</th>
             <th>Your offer</th>
             <th>Date</th>
             <th>Is the highest</th>
           </tr>
            {% for bid in bids %}
               <tr class="bid-tr">
-                <td> {{ bid.item }} </td>
+                <td><a href="{% url 'item-detail' pk=bid.item.id %}"> {{ bid.item }} </a></td>
                 <td> ${{ bid.bid }} </td>
                 <td> {{ bid.date|date:"d F Y, H:i:s" }} </td>
-                <td> yes/no </td>
+                <td class="centering">
+            {% if bid.bid == bid.item.price %}
+                   <i class="fa fa-check"></i>
+            {% else %}
+                   <i class="fa fa-times"></i>
+            {% endif %}
+                </td>
               </tr>
             {% endfor %}
         </table>
     </div>
     </article>
+
+    {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+    {% endif %}
+
+
 
 {% endblock content %}

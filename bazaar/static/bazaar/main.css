@@ -92,6 +92,14 @@ a.article-title:hover {
   text-decoration: none;
 }
 
+.article-description {
+  font-size: 19px;
+  font-weight: 1000px;
+  padding-bottom: 1px;
+  margin-bottom: 6px;
+  border-bottom: 2px solid #6662ff
+}
+
 .article-svg {
   width: 25px;
   height: 25px;
@@ -139,6 +147,93 @@ a.article-title:hover {
    border:none;
 }
 
+
+
+*, *:after, *:before{
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.parent {
+  padding: 15px;
+}
+
+.parent:after
+{
+  clear: both;
+  content: "";
+  display: block;
+}
+
+
+.column {
+  display: block;
+  float: left;
+  width: 100%;
+  padding: 10px;
+  font-family: Arial;
+  font-size: 45px;
+}
+
+.main {
+}
+.sidebar {
+
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media only screen and (min-width: 770px){
+   .main {
+    width: 59.66%;
+  }
+  .sidebar {
+    width: 34.33%;
+  }
+}
+@media only screen and (min-width: 1331px){
+   .main {
+    width: 62%;
+  }
+  .sidebar {
+    width: 32.33%;
+  }
+}
+
+.wrapper {
+	 white-space: nowrap;
+    border:1px solid #000;
+    display:inline-block;
+}
+
+
+.cosmicbutton:hover {
+   background-color: #2a2a72;
+   background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
+   border: none;
+  -webkit-animation:spin 8s linear infinite;
+  -moz-animation:spin 8s linear infinite;
+  animation:spin 4s linear infinite;
+}
+
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
 /* semi photo gallery */
 .dropdown {
   position: relative;
@@ -148,7 +243,14 @@ a.article-title:hover {
   width: 180px;
   height: 180px;
   overflow: hidden;
+  -webkit-animation:spin 8s linear infinite;
+  -moz-animation:spin 8s linear infinite;
+  animation:spin 8s linear infinite;
 }
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(-360deg); } }
+
 
 
 .dropdown .img-thumbnail {
@@ -177,6 +279,8 @@ a.article-title:hover {
 .dropdown img:hover{
     filter: grayscale(50%);
     transform: scale(1.1) translate(-45%,-45%);
+    background-color: #045de9;
+    background-image: linear-gradient(315deg, #045de9 0%, #09c6f9 74%);
 }
 .square {
      position: relative;
