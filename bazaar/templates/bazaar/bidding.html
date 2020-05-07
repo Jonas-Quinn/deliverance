@@ -17,8 +17,7 @@
 {% block extra_js %}
     <script>
     const values = {
-      bid: {{ item.price|default_bid }},
-      b: 15
+      bid: {{ item.price|default_bid }}
     }
 
     const keys = Object.keys(values)
