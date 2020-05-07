@@ -25,13 +25,13 @@ from .forms import *
 #     return param != '' and param is not None
 
 
-
 class ItemListView(generic.ListView):
     model = Item
     template_name = 'bazaar/home.html' # <APP>/<MODEL>_<VIEWTYPE>.HTML
     context_object_name = 'posts'  # def: home
     ordering = '-date_posted'
     paginate_by = 4
+
     def get_queryset(self):
         queryset = Item.objects.all().order_by('-date_posted')
         title_contains_query = self.request.GET.get('title_contains')
@@ -57,11 +57,11 @@ class MerchantBidListView(generic.ListView):
     template_name = 'bazaar/merchant_bids.html' # <APP>/<MODEL>_<VIEWTYPE>.HTML
     context_object_name = 'bids'  # def: home
     paginate_by = 15
+
     def get_queryset(self):
         user = get_object_or_404(User, username = self.kwargs.get('username'))
         # item = Item.objects.filter(merchant=user)
         return Bid.objects.filter(merchant=user).order_by('-date')
-
 
 
 class ItemDetailView(generic.DetailView):
@@ -92,6 +92,7 @@ class ItemCreateView(LoginRequiredMixin, generic.CreateView):  # this order redi
         form.instance.merchant = self.request.user
         return super().form_valid(form)
 
+
 @active_auction
 @login_required
 def bidding(request, pk):
@@ -108,8 +109,8 @@ def bidding(request, pk):
             messages.success(request, "Auction has been successfully bidded.")
             return HttpResponseRedirect('/item/%s/' % item.id)
         else:  # Form is invalid
-            print
-            form.errors  # You have the error list here.
+            print()
+            form.errors()  # You have the error list here.
 
     context = {
         'form': form,
@@ -129,13 +130,8 @@ def item_create(request):
             item = form.save(commit=False)
             item.merchant = request.user
             item.save()
-            print(formset.cleaned_data)
             for f in formset:
-
-                print(request.POST)
-                print(request.FILES)
                 try:
-                    print(5)
                     photo = Item_Image(item=item, image=f.cleaned_data['image'])
                     photo.save()
                 except Exception as e:
@@ -152,7 +148,6 @@ def item_create(request):
     return render(request, 'bazaar/item_create.html', context)
 
 
-
 class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Item
     fields = ['title', 'description']
@@ -160,12 +155,14 @@ class ItemUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
     def form_valid(self, form):
         form.instance.merchant = self.request.user
         return super().form_valid(form)
+
 # check correctness login with owner of item
     def test_func(self):
         item = self.get_object()
         if self.request.user == item.merchant:
             return True
         return False
+
 
 class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):  # this order redirect to login page if you're not logged
     model = Item
@@ -177,37 +174,7 @@ class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
             return True
         return False
 
+
 def about(request):
     return render(request, 'bazaar/about.html', {'title': 'about'})
 
-
-# def edit_item(request, item_id):
-#     question = get_object_or_404(Question, pk = item_id)
-#     try:
-#         selected_choice = question.choice_set.get(pk=request.POST['choice'])
-#     except (KeyError, Choice.DoesNotExist):
-#         # Redisplay the question voting form.
-#         return render(request, 'polls/detail.html', {'question': question, 'error_message': "You didn't select a choice.",})
-#     else:
-#         selected_choice.votes +=1
-#         selected_choice.save()
-#         # Always return an HttpResponseRedirect after successfully dealing
-#         # with POST data. This prevents data from being posted twice if a
-#         # user hits the Back button.
-#     return HttpResponseRedirect(reverse('polls:results', args=(question_id,)))
-#
-# @login_required
-# def watch(request, item_id):
-#     item = get_object_or_404(Item, pk = item_id)
-#     new_item = item.get(pk=request.POST['title'])
-#     add_item = Watch_List.objects.filter(user=request.user, items = new_item)
-#     if add_item.exists():
-#         user.watch_list.items.remove(add_item)
-#     else:
-#         user.watch_list.add(new_item)
-#         add_item.save()
-#
-# Always return an HttpResponseRedirect after successfully dealing
-# with POST data. This prevents data from being posted twice if a
-# user hits the Back button
-#

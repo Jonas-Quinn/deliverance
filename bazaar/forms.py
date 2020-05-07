@@ -20,7 +20,14 @@ class ItemCreateForm(forms.ModelForm):
             'main_image',
         )
         widgets = {
-            'end_of_auction': forms.DateTimeInput( attrs={'class': 'cosmicbutton',} ),
+            'title': forms.TextInput(
+                attrs={'style': 'width: 100%; background: rgba(235, 255, 87, 0.6);', } ),
+            'description': forms.Textarea(
+                attrs={'style': 'width: 100%; background: rgba(235, 255, 87, 0.6);', } ),
+            'price': forms.NumberInput(
+                attrs={'style': 'width: 200px; background: rgba(235, 255, 87, 0.6);', } ),
+            'end_of_auction': forms.DateTimeInput(
+                attrs={'class': 'cosmicbutton','style': 'background: rgba(235, 255, 87, 0.6);',} ),
         }
 
     def __init__(self, *args, **kwargs):

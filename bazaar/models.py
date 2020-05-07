@@ -8,9 +8,10 @@ from django.contrib import messages
 import datetime
 from django.core.validators import MinValueValidator
 # from storages.backends.s3boto3 import S3Boto3Storage
-
 import uuid
 import os
+
+
 def path_and_rename(prefix, filename):
     ext = filename.split('.')[-1]
     filename = '{}.{}'.format(uuid.uuid1().hex, ext)
@@ -38,6 +39,7 @@ class Item(models.Model):
             "You can\'t set end of auction in the past."
         )]
     )
+
     class Condition(models.TextChoices):
         NEW = 'NEW', _('New')
         USED = 'USE', _('Used')
@@ -71,7 +73,6 @@ class Item(models.Model):
         # 'main image', default='default_item.jpg', upload_to=file_name
     )
 
-
     def get_absolute_url(self):
         return reverse('item-detail', kwargs={'pk': self.pk})
 
@@ -89,22 +90,10 @@ class Item(models.Model):
 
 class Item_Image(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=get_path_for_my_model_file, default='default_item.jpg')
 
     def __str__(self):
         return str(self.item.id)
-
-    image = models.ImageField(upload_to=get_path_for_my_model_file, default='default_item.jpg')
-
-    # problem with this feature in S3
-    # def save(self, *args, **kwargs):
-    #     super().save(*args,**kwargs)
-    # #
-    #     img = Image.open(self.image.path)
-    #
-    #     if img.height > 800 or img.width > 800:
-    #         output_size = (800, 800)
-    #         img.thumbnail(output_size)
-    #         img.save(self.image.path)
 
 
 class Bid(models.Model):

@@ -2,6 +2,8 @@ from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from .models import Item
 from datetime import datetime
+
+
 def active_auction(function):
     def wrap(request, *args, **kwargs):
         item = Item.objects.get(pk=kwargs['pk'])
