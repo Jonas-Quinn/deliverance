@@ -109,8 +109,8 @@ def bidding(request, pk):
             messages.success(request, "Auction has been successfully bidded.")
             return HttpResponseRedirect('/item/%s/' % item.id)
         else:  # Form is invalid
-            print()
-            form.errors()  # You have the error list here.
+            print
+            form.errors  # You have the error list here.
 
     context = {
         'form': form,
