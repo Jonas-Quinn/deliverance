@@ -25,8 +25,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = (os.environ.get('DUBUG_VALUE') == 'True')  #need to change U
-DEBUG = True
+DEBUG = (os.environ.get('DUBUG_VALUE') == 'True')  #need to change U
+# DEBUG = True
 
 ALLOWED_HOSTS = ['bluebazaar.herokuapp.com', 'localhost', '127.0.0.1']
 #ALLOWED_HOSTS = []
