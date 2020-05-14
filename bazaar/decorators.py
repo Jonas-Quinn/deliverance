@@ -6,7 +6,7 @@ from datetime import datetime
 
 def active_auction(function):
     def wrap(request, *args, **kwargs):
-        item = Item.objects.get(pk=kwargs['pk'])
+        item = Item.objects.get(slug=kwargs['slug'])
         if item.end_of_auction > timezone.now():
             return function(request, *args, **kwargs)
         else:

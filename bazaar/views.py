@@ -72,8 +72,8 @@ class ItemDetailView(generic.DetailView):
         return Item.objects.filter(date_posted__lte=timezone.now())
 
 
-def item_detail(request, pk):
-    item = get_object_or_404(Item, pk=pk)
+def item_detail(request, slug=None):
+    item = get_object_or_404(Item, slug=slug)
     item_images = list(Item_Image.objects.filter(item=item))
 
     context = {
@@ -95,8 +95,8 @@ class ItemCreateView(LoginRequiredMixin, generic.CreateView):  # this order redi
 
 @active_auction
 @login_required
-def bidding(request, pk):
-    item = get_object_or_404(Item, pk=pk)
+def bidding(request, slug):
+    item = get_object_or_404(Item, slug=slug)
     form = BiddingForm(request.POST, old_price=item.price)
     if request.method == "POST":
         if form.is_valid():  # This would call the clean method for you
@@ -107,7 +107,7 @@ def bidding(request, pk):
             item.price = bid.bid
             item.save()
             messages.success(request, "Auction has been successfully bidded.")
-            return HttpResponseRedirect('/item/%s/' % item.id)
+            return HttpResponseRedirect(item.get_absolute_url())
         else:  # Form is invalid
             print
             form.errors  # You have the error list here.
@@ -137,7 +137,7 @@ def item_create(request):
                 except Exception as e:
                     break
             messages.success(request, "Post has been successfully created.")
-            return HttpResponseRedirect('/item/%s/' %item.id)
+            return HttpResponseRedirect(item.get_absolute_url())
     else:
         form = ItemCreateForm()
         formset = ImageFormset(queryset=Item_Image.objects.none())

@@ -1,6 +1,8 @@
 
 from django.db import models
+from django.db.models.signals import pre_save
 from django.utils import timezone
+from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -25,6 +27,7 @@ def get_path_for_my_model_file(instance, filename):
 class Item(models.Model):
     merchant      = models.ForeignKey(User, on_delete=models.CASCADE)  # , null=True, blank=True
     title         = models.CharField(max_length=200)
+    slug          = models.SlugField(unique=True)
     description   = models.TextField(default='')
     date_posted   = models.DateTimeField('date published', auto_now_add=True)
     price         = models.DecimalField(
@@ -74,7 +77,7 @@ class Item(models.Model):
     )
 
     def get_absolute_url(self):
-        return reverse('item-detail', kwargs={'pk': self.pk})
+        return reverse('item-detail', kwargs={'slug': self.slug})
 
     def remaining_time(self):
         # if (self.end_of_auction - self.date_posted).days > 0:
@@ -82,7 +85,24 @@ class Item(models.Model):
 
     remaining_time.admin_order_field = 'remaining_time'
     remaining_time.short_description = 'How much time is left?'
-#
+
+def create_slug(instance, new_slug=None):
+    slug = slugify(instance.title)
+    if new_slug is not None:
+        slug = new_slug
+    qs = Item.objects.filter(slug=slug).order_by("-id")
+    exists = qs.exists()
+    if exists:
+        new_slug = "%s-%s" %(slug, qs.first.id)
+        return create_slug(instance, new_slug=new_slug)
+    return slug
+
+def pre_save_item_receiver(sender, instance, *args, **kwargs):
+   if not instance.slug:
+       instance.slug = create_slug(instance)
+
+pre_save.connect(pre_save_item_receiver, sender=Item)
+
 # def upload_images_location(instance, filename):
 #     filebase, extension = filename.split('.')
 #     return 'auction_images/%s/%s.%s' % (instance.item.id, instance.id, extension)

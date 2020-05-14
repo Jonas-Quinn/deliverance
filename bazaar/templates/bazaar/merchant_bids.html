@@ -12,7 +12,7 @@
           </tr>
            {% for bid in bids %}
               <tr class="bid-tr">
-                <td><a href="{% url 'item-detail' pk=bid.item.id %}"> {{ bid.item }} </a></td>
+                <td><a href="{% url 'item-detail' slug=bid.item.slug %}"> {{ bid.item }} </a></td>
                 <td> ${{ bid.bid }} </td>
                 <td> {{ bid.date|date:"d F Y, H:i:s" }} </td>
                 <td class="centering">

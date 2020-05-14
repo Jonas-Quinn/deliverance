@@ -26,12 +26,12 @@
         </div>
     <div class="media content" >
         <div class="square">
-          <a class="article-title" href="{% url 'item-detail' post.id %}">
+          <a class="article-title" href="{% url 'item-detail' post.slug %}">
             <img class="landscape" src="{{ post.main_image.url }}">
           </a>
         </div>
       <div class="media-body" >
-        <h3><a class="article-title" href="{% url 'item-detail' post.id %}">{{ post.title }}</a></h3>
+        <h3><a class="article-title" href="{% url 'item-detail' post.slug %}">{{ post.title }}</a></h3>
         <h2 class="article-title">${{ post.price }}</h2>
         <table class="content-table">
           <tr class="content-table">

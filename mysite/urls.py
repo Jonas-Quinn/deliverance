@@ -23,7 +23,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='adminpage'),
-    path('', include('bazaar.urls')),
     path('register/', user_views.register, name='register'),
     path('profile/', user_views.profile, name='profile'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
@@ -44,6 +43,7 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(
         template_name='users/password_reset_complete.html'),
         name='password_reset_complete'),
+    path( '', include( 'bazaar.urls' ) ),
 ]
 
 if settings.DEBUG:

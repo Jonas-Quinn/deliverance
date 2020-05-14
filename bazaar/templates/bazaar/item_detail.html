@@ -9,8 +9,8 @@
       <a class="mr-2" href="{% url 'merchant-items' item.merchant.username %}">{{ item.merchant }}</a>
       <small class="mr-3">{{ item.date_posted|date:"d F Y" }}</small>
         {% if item.merchant == user %}
-          <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'item-update' item.id %}">Edit</a>
-          <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'item-delete' item.id %}">Delete</a>
+          <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'item-update' item.slug %}">Edit</a>
+          <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'item-delete' item.slug %}">Delete</a>
         {% endif %}
     </div>
     <div class="media content">
@@ -23,7 +23,7 @@
           <h3>{{ item.title }}</h3>
           <div class="media-body">
             {% if item.merchant != user and item.end_of_auction|left_time != 0 %}
-              <a class="btn btn-warning rotation cosmicbutton" href="{% url 'bidding' item.id %}">Place bid</a>
+              <a class="btn btn-warning rotation cosmicbutton" href="{% url 'bidding' item.slug %}">Place bid</a>
             {% endif %}
               <h2 class="article-title" style="float: left;" >${{ item.price }} &nbsp; </h2>
           </div>
