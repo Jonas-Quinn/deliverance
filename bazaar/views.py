@@ -1,16 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Item, Item_Image, Watch_List
+from .models import Item, Item_Image
 from django.views import generic
+from django.http import Http404
 from users.models import Profile
 from django.utils import timezone
-from django.contrib.auth.models import User
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     UserPassesTestMixin
 )
 
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.forms import inlineformset_factory, modelformset_factory
 from .decorators import active_auction
@@ -48,7 +50,7 @@ class MerchantItemListView(generic.ListView):
     paginate_by = 4
 
     def get_queryset(self):
-        user = get_object_or_404(User, username = self.kwargs.get('username'))
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Item.objects.filter(merchant=user).order_by('-date_posted')
 
 
@@ -59,9 +61,39 @@ class MerchantBidListView(generic.ListView):
     paginate_by = 15
 
     def get_queryset(self):
-        user = get_object_or_404(User, username = self.kwargs.get('username'))
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
         # item = Item.objects.filter(merchant=user)
+        if user != self.request.user:
+            raise Http404("You're trying to reach data of other users. "
+                          "You are a bad boy.")
         return Bid.objects.filter(merchant=user).order_by('-date')
+
+
+class MerchantItemWatchListView(generic.ListView):
+    model = Item
+    template_name = 'bazaar/merchant_watch_list.html' # <APP>/<MODEL>_<VIEWTYPE>.HTML
+    context_object_name = 'posts'  # def: home
+    ordering = '-date_posted'
+    paginate_by = 4
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        # item = Item.objects.filter(merchant=user)
+        if user != self.request.user:
+            raise Http404("You're trying to reach data of other users. "
+                          "You are a bad boy.")
+        return Item.objects.filter(watch_list__in= [user]).order_by('-date_posted')
+
+    # def form_valid(self, form):
+    #     form.instance.merchant = self.request.user
+    #     return super().form_valid( form )
+    #
+    # # check correctness login with owner of item
+    # def test_func(self):
+    #     item = self.get_object()
+    #     if self.request.user == item.merchant:
+    #         return True
+    #     return False
 
 
 class ItemDetailView(generic.DetailView):
@@ -82,6 +114,57 @@ def item_detail(request, slug=None):
         'bids': Bid.objects.filter(item=item).order_by('-date')
     }
     return render(request, "bazaar/item_detail.html", context)
+
+
+# @method_decorator(login_required, name='dispatch')
+class ItemWatchList(LoginRequiredMixin, generic.RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        slug = self.kwargs.get('slug')
+        item = get_object_or_404(Item, slug=slug)
+        url_ = item.get_absolute_url()
+        user = self.request.user
+        if user.is_authenticated:
+            if user in item.watch_list.all():
+                item.watch_list.remove(user)
+            else:
+                item.watch_list.add(user)
+        return url_
+
+    @method_decorator( login_required )
+    def dispatch(self, *args, **kwargs):
+        return super(ItemWatchList, self ).dispatch( *args, **kwargs )
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+from django.contrib.auth.models import User
+
+
+class ItemWatchListAPI(APIView):
+    authentication_classes = (authentication.SessionAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, slug=None, format=None):
+        # slug = self.kwargs.get("slug")
+        item = get_object_or_404(Item, slug=slug)
+        url_ = item.get_absolute_url()
+        user = self.request.user
+        updated = False
+        watched = False
+        if user.is_authenticated:
+            if user in item.watch_list.all():
+                watched = False
+                item.watch_list.remove(user)
+            else:
+                watched = True
+                item.watch_list.add(user)
+            updated = True
+        data = {
+            "updated": updated,
+            "watched": watched
+        }
+        return Response(data)
 
 
 class ItemCreateView(LoginRequiredMixin, generic.CreateView):  # this order redirect to login page if you're not logged

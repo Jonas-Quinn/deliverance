@@ -13,14 +13,16 @@ class BidsInline(admin.TabularInline):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None,   {'fields': ['title']}),
-        (None,  {'fields': ['description']}),
-        ('Date information', {'fields': ['end_of_auction'], 'classes': ['collapse']}),
-    ]
+    # fieldsets = [
+    #     (None,   {'fields': ['title']}),
+    #     (None,  {'fields': ['description']}),
+    #     ('Date information', {'fields': ['end_of_auction'], 'classes': ['collapse']}),
+    # ]
     inlines = [PicsInline]
     list_display = ('title', 'merchant', 'date_posted', 'remaining_time')
     list_filter = ['title', 'date_posted']
+    class Meta:
+        model = Item
 
 
 class ItemBidsAdmin(admin.ModelAdmin):

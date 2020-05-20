@@ -9,9 +9,12 @@ from .views import (
     ItemDeleteView,
     MerchantItemListView,
     MerchantBidListView,
+    MerchantItemWatchListView,
     item_create,
     item_detail,
-    bidding
+    bidding,
+    ItemWatchList,
+    ItemWatchListAPI
 )
 from . import views
 
@@ -28,7 +31,8 @@ urlpatterns = [
     # returns 404 Not found
     path('', ItemListView.as_view(), name='bazaar-home'),
     path('about/', views.about, name='bazaar-about' ),
-    path('merchant/<str:username>', MerchantItemListView.as_view(), name='merchant-items'),
+    path('merchant/auctions/<str:username>', MerchantItemListView.as_view(), name='merchant-items'),
+    path('merchant/watch-list/<str:username>', MerchantItemWatchListView.as_view(), name='merchant-watch-list'),
     path('merchant/bids/<str:username>', MerchantBidListView.as_view(), name='merchant-bids'),
     url(r'^new-auction/$', item_create, name='item_create' ),
     url(r'^auction/(?P<slug>[\w-]+)/$',  item_detail, name='item-detail'),
@@ -36,4 +40,6 @@ urlpatterns = [
     url(r'^auction/(?P<slug>[\w-]+)/update/$', ItemUpdateView.as_view(), name='item-update'),
     url(r'^auction/(?P<slug>[\w-]+)/delete/$', ItemDeleteView.as_view(), name='item-delete'),
     url(r'^auction/(?P<slug>[\w-]+)/bidding/$', bidding, name='bidding'),
+    url(r'^auction/(?P<slug>[\w-]+)/watch/$', ItemWatchList.as_view(), name='watch'),
+    url(r'^auction/(?P<slug>[\w-]+)/watch/api$', ItemWatchListAPI.as_view(), name='api-watch'),
 ]

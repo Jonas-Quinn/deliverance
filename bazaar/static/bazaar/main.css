@@ -148,6 +148,34 @@ a.article-title:hover {
 }
 
 
+/* position of elements in auction */
+.square-width{
+    width: 100%;
+}
+.square {
+     position: relative;
+     width: 150px;
+     height: 150px;
+     margin-right: 10px;
+     overflow: hidden;
+  }
+.square img {
+     position: absolute;
+     max-width: 100%;
+     width: 100%;
+     height: auto;
+     padding: 5px;
+     object-fit: cover;
+     top: 50%;
+     left: 50%;
+     transform: translate( -50%, -50%);
+ }
+img.landscape {
+    height: 100%;
+    width: auto;
+}
+
+
 
 *, *:after, *:before{
   -webkit-box-sizing: border-box;
@@ -208,6 +236,15 @@ a.article-title:hover {
     display:inline-block;
 }
 
+.button-bid{
+    border: none;
+    background: linear-gradient(43deg, rgba(2,0,36,1) 0%, rgba(240,209,40,0.8505602069929534) 20%, rgba(216,247,60,1) 87%, rgba(85,226,255,1) 100%);
+}
+
+.button-watch{
+    border: none;
+    background: linear-gradient(43deg, rgba(2,0,36,1) 0%, rgba(8,129,126,1) 58%, rgba(0,212,255,1) 100%);
+}
 
 .cosmicbutton:hover {
    background-color: #2a2a72;
@@ -281,28 +318,6 @@ a.article-title:hover {
     transform: scale(1.1) translate(-45%,-45%);
     background-color: #045de9;
     background-image: linear-gradient(315deg, #045de9 0%, #09c6f9 74%);
-}
-.square {
-     position: relative;
-     width: 150px;
-     height: 150px;
-     margin-right: 10px;
-     overflow: hidden;
-  }
-.square img {
-     position: absolute;
-     max-width: 100%;
-     width: 100%;
-     height: auto;
-     padding: 5px;
-     object-fit: cover;
-     top: 50%;
-     left: 50%;
-     transform: translate( -50%, -50%);
- }
-img.landscape {
-    height: 100%;
-    width: auto;
 }
 
 /* Table using in bids item_detail*/

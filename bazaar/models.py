@@ -5,7 +5,9 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
+
 from django.contrib import messages
 import datetime
 from django.core.validators import MinValueValidator
@@ -42,7 +44,9 @@ class Item(models.Model):
             "You can\'t set end of auction in the past."
         )]
     )
-
+    watch_list    = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, blank=True, related_name='item_watch_list'
+    )
     class Condition(models.TextChoices):
         NEW = 'NEW', _('New')
         USED = 'USE', _('Used')
@@ -71,17 +75,21 @@ class Item(models.Model):
         return 'auction_images/%s/main_image.%s' % (self.id, extension)
 
     main_image = models.ImageField(
-        # 'main image', default='heroes3.png', upload_to=file_name, storage=S3Boto3Storage()
         'thumbnail', default='default_item.jpg', upload_to=get_path_for_my_model_file
-        # 'main image', default='default_item.jpg', upload_to=file_name
     )
 
     def get_absolute_url(self):
         return reverse('item-detail', kwargs={'slug': self.slug})
 
+    def get_watch_url(self):
+        return reverse('watch', kwargs={'slug': self.slug})
+
+    def get_api_watch_url(self):
+        return reverse('api-watch', kwargs={'slug': self.slug})
+
     def remaining_time(self):
         # if (self.end_of_auction - self.date_posted).days > 0:
-        return ( self.end_of_auction - timezone.now() ).days
+        return (self.end_of_auction - timezone.now()).days
 
     remaining_time.admin_order_field = 'remaining_time'
     remaining_time.short_description = 'How much time is left?'
@@ -126,6 +134,3 @@ class Bid(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
 
-class Watch_List(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField(Item, verbose_name="watch list")

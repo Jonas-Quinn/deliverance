@@ -17,6 +17,7 @@
     <link rel="stylesheet" type = "text/css" href="{% static 'bazaar/lightbox.min.css' %}">
       <!-- jQuery -->
     <!-- Moment.js -->
+    <script src="{% static 'bazaar/jquery.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
 
 <!-- Tempus Dominus Bootstrap 4  - provides datetimeinput widget -->
@@ -30,7 +31,6 @@
         <title>Django Bazaar</title>
     {% endif %}
 <!--    download library -->
-    <script src="{% static 'bazaar/jquery.js' %}"></script>
     <script src="{% static 'bazaar/lightbox-plus-jquery.min.js' %}"></script>
 </head>
 <body>
@@ -50,9 +50,10 @@
             <div class="navbar-nav" text-align="right">
                 {% if user.is_authenticated %}
                   <a class="nav-item nav-link" href="{% url 'merchant-items' user.username %}">My auctions</a>
+                  <a class="nav-item nav-link" href="{% url 'merchant-watch-list' user.username %}">My watch list</a>
                   <a class="nav-item nav-link" href="{% url 'merchant-bids' user.username %}">My bids</a>
                   <a class="nav-item nav-link" href="{% url 'item_create' %}">Sell</a>
-                  <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                  <a class="nav-item nav-link" href="{% url 'profile' %}">My account</a>
                   <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
                 {% if user.is_superuser %}
                   <a class="nav-item nav-link" href="/admin/">Admin page</a>
@@ -66,8 +67,8 @@
         </div>
       </nav>
     </header>
-    <br style="margin-top:30px;"/>
-    <main role="main" class="container">
+    <br />
+    <main role="main" class="container" style="margin-top:35px;">
       <div class="row">
         <div class="col">
             {% if messages %}
@@ -89,7 +90,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     {% block extra_js %}{% endblock extra_js %}
 </body>
 </html>

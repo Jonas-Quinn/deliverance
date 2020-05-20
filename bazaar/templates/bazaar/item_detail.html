@@ -23,7 +23,7 @@
           <h3>{{ item.title }}</h3>
           <div class="media-body">
             {% if item.merchant != user and item.end_of_auction|left_time != 0 %}
-              <a class="btn btn-warning rotation cosmicbutton" href="{% url 'bidding' item.slug %}">Place bid</a>
+              <a class="btn btn-warning rotation cosmicbutton button-bid" href="{% url 'bidding' item.slug %}">Place bid</a>
             {% endif %}
               <h2 class="article-title" style="float: left;" >${{ item.price }} &nbsp; </h2>
           </div>
@@ -52,6 +52,31 @@
               {% else %}
                 <small class="mr-3 text-info">({{ item.end_of_auction|date:"d.m.Y, H:i:s" }})</small>
               {% endif %}
+            </td>
+          </tr>
+            <tr class="content-table">
+            <td class="content-table">
+                <small id="watchers">
+                    {{ item.watch_list.count }}
+                    {% if item.watch_list.count == 1 %}
+                    watcher
+                    {% else %}
+                    watchers
+                    {% endif %}
+
+                </small>
+            </td>
+            <td class="content-table">
+                <a class='watch-btn btn btn-sm btn-info rotation cosmicbutton button-watch'
+                   data-href='{{ item.get_api_watch_url }}'
+                   data-watch='{{ item.watch_list.count }}'
+                   href="{{ item.get_watch_url }}">
+                    {% if user in item.watch_list.all %}
+                    Unwatch
+                    {% else %}
+                    Watch
+                    {% endif %}
+                </a>
             </td>
           </tr>
         </table>
@@ -100,6 +125,61 @@
 
 {% block extra_js %}
 <script type="text/javascript">
+$(document).ready(function(){
+          function updateText(btn, verb){
+          btn.text(verb);
+      }
+    {% if user in item.watch_list.all %}
+    var i = 1;
+    var k = 1;
+    {% else %}
+    var i = 1;
+    var k = 0;
+    {% endif %}
+      $(".watch-btn").click(function(e){
+        e.preventDefault();
+        var this_ = $(this);
+        var watch_list_url = this_.attr("data-href");
+        var watch_list_count = parseInt(this_.attr("data-watch")) | 0;
+        var add_to_watch_list = watch_list_count + i - k;
+        var remove_from_watch_list = watch_list_count - k;
+        if (watch_list_url){
+           $.ajax({
+            url: watch_list_url,
+            method: "GET",
+            data: {},
+            }).done(function(data){
+              console.log(data);
+              var new_watch_list;
+              if (data.watched){
+                  updateText(this_, "Unwatch");
+                  if (watch_list_count+i - k == 1){
+                  var answer = watch_list_count+i - k + " watcher"
+                  } else {
+                  var answer = watch_list_count+i - k + " watchers"
+                  }
+                  $('#watchers').html(answer);
+              } else {
+                  updateText(this_, "Watch");
+                  if (watch_list_count-k == 1){
+                  var answer = watch_list_count-k + " watcher"
+                  } else {
+                  var answer = watch_list_count-k + " watchers"
+                  }
+                  $('#watchers').html(answer);
+                  // remove one watch
+              }
+            }).fail(function(error){
+              console.log(error);
+              console.log("error");
+              $(location).attr('href', '{% url 'login' %}');
+            });
+        }
+
+      });
+  });
+
+
  $( document ).each(
     setInterval(
     function() {
