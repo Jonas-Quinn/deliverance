@@ -13,13 +13,13 @@
           <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'item-delete' item.slug %}">Delete</a>
         {% endif %}
     </div>
-    <div class="media content">
-        <div class="square">
+    <div class="auction">
+        <div class="auction-image auction-image-main">
            <a target="_blank"  href="{{ item.main_image.url }}" data-lightbox="mygallery" >
              <img class="landscape" src="{{ item.main_image.url }}">
            </a>
         </div>
-      <div class="media-body">
+      <div class="auction-detail">
           <h3>{{ item.title }}</h3>
           <div class="media-body">
             {% if item.merchant != user and item.end_of_auction|left_time != 0 %}

@@ -23,24 +23,30 @@
 </head>
 <body>
     <header class="site-header">
+
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="{% url 'bazaar-home'%}">Django Bazaar</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand mr-4 bluebazaar-header"
+             href="{% url 'bazaar-home'%}">Blue Bazaar</a>
+          <div class="container">
+          <button class="navbar-toggler" style="position:fixed; top: 10px; right: 5px;"
+                  type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{% url 'bazaar-home'%}">Home</a>
-              <a class="nav-item nav-link" href="{% url 'bazaar-about' %}">About</a>
+          <div class="collapse navbar-collapse" style=" margin-top: 10px; margin-left: 150px; overflow:auto; float: right;" id="navbarToggle">
+            <div class="navbar-nav mr-auto centering">
             </div>
             <!-- Navbar Right Side -->
-            <div class="navbar-nav" text-align="right">
+            <div class="navbar-nav centering"
+
+                 text-align="right">
+
+                  <a class="nav-item nav-link" href="{% url 'bazaar-about' %}">About</a>
                 {% if user.is_authenticated %}
                   <a class="nav-item nav-link" href="{% url 'merchant-items' user.username %}">My auctions</a>
+                  <a class="nav-item nav-link " href="{% url 'merchant-watch-list' user.username %}">Watch list</a>
                   <a class="nav-item nav-link" href="{% url 'merchant-bids' user.username %}">My bids</a>
                   <a class="nav-item nav-link" href="{% url 'item_create' %}">Sell</a>
-                  <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                  <a class="nav-item nav-link" href="{% url 'profile' %}">My account</a>
                   <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
                 {% if user.is_superuser %}
                   <a class="nav-item nav-link" href="/admin/">Admin page</a>
@@ -55,11 +61,11 @@
       </nav>
     </header>
     <br style="margin-top:30px;"/>
-    <main role="main" class="container">
+    <main role="main" class="container" style="margin-top:35px;">
       <article class="media content-section">
           <div class="media-body">
 
-               <h1 class="header-center">About Bazaar </h1>
+               <h1 class="header-center bluebazaar-header" style="position:relative;">About Bazaar </h1>
               <p>
                   Hi! I'm Michael and this is my first site.
                   I made it to better understand django framework

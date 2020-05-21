@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = (os.environ.get('DUBUG_VALUE') == 'True')  #need to change U
 # DEBUG = True
 
-ALLOWED_HOSTS = ['bluebazaar.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['bluebazaar.herokuapp.com', 'localhost', '127.0.0.1', '192.168.8.101']
 #ALLOWED_HOSTS = []
 
 

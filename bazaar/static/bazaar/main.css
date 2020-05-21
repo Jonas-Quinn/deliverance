@@ -131,6 +131,19 @@ a.article-title:hover {
    border:none;
 }
 
+.bluebazaar-header{
+    font-family: URW Chancery L, cursive;
+    position:fixed;
+    top: -5px;
+    left: 5px;
+    background: -webkit-linear-gradient(43deg, rgba(1,45,159,1) 0%, rgba(60,247,204,1) 100%);
+    font-size: 40px;
+    font-weight: 1000;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    white-space: nowrap;
+}
+
 .header-center{
   text-align: center;
 }
@@ -149,32 +162,6 @@ a.article-title:hover {
 
 
 /* position of elements in auction */
-.square-width{
-    width: 100%;
-}
-.square {
-     position: relative;
-     width: 150px;
-     height: 150px;
-     margin-right: 10px;
-     overflow: hidden;
-  }
-.square img {
-     position: absolute;
-     max-width: 100%;
-     width: 100%;
-     height: auto;
-     padding: 5px;
-     object-fit: cover;
-     top: 50%;
-     left: 50%;
-     transform: translate( -50%, -50%);
- }
-img.landscape {
-    height: 100%;
-    width: auto;
-}
-
 
 
 *, *:after, *:before{
