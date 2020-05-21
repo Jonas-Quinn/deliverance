@@ -8,6 +8,7 @@ from django.utils.timezone import is_aware, is_naive, make_aware, make_naive
 import dateutil.parser
 import datetime
 import decimal
+import math
 register = template.Library()
 
 
@@ -37,5 +38,5 @@ def number_of_bids(item):
 
 @register.filter
 def default_bid(price):
-    new_price = round(price*decimal.Decimal(1.05), 2)
+    new_price = max(decimal.Decimal(0.01), math.ceil(price*decimal.Decimal(105))/100)
     return new_price

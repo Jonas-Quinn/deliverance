@@ -70,3 +70,8 @@
     margin-top: 0px;
   }
 }
+@media only screen and (min-width: 992px){
+    .auction-detail {
+        width: 78%;
+      }
+}

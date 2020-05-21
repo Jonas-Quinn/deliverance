@@ -4,9 +4,11 @@ from django.contrib.auth.models import User
 from django.forms import DateTimeField
 from django.contrib.admin import widgets
 from django.core.validators import ValidationError, MinValueValidator
+from django.utils.safestring import mark_safe
 from crispy_forms.helper import FormHelper
 import datetime
 import decimal
+import math
 
 class ItemCreateForm(forms.ModelForm):
     class Meta:
@@ -86,7 +88,13 @@ class BiddingForm(forms.ModelForm):
             raise forms.ValidationError("Please fill out missing field.")
 
         new_price = cd['bid']
-        if new_price < round( self.old_price*decimal.Decimal(1.05), 2):
-            raise ValidationError("The new price must be at least 5% higher then the previous one.")
+        limit = round(
+            max(decimal.Decimal(0.01), math.ceil(self.old_price*decimal.Decimal(105))/100),2
+        )
+        if math.ceil(new_price*decimal.Decimal(100))/100 < limit:
+            raise ValidationError(mark_safe("The new price must be at least 5% higher then the previous one. <br />"
+                                  "The lowest possible bid: ${0}, your bid: ${1}. <br />"
+                                            " Draw conclusions.".format(limit, new_price)))
 
         return cd
+
